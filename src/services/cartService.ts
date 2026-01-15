@@ -1,4 +1,4 @@
-import { cartModel } from "../models/cartModel"
+import { cartModel, Icart, ICartItem } from "../models/cartModel"
 import { productModel } from "../models/ProductModel";
 
 interface createCartForUser {
@@ -73,16 +73,13 @@ interface updateItemInCart {
 export const updateItemInCart = async ({userId, productId, quantity}: updateItemInCart) => {
   const cart = await getActiveCart({userId})
 
-  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString());
-
-  console.log(existsInCart);
-  
+  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString())  
 
   if (!existsInCart) {
     return {data: "Item dose not exist in cart!", statusCode: 400}
   }
 
-    const product = await productModel.findById(productId)
+  const product = await productModel.findById(productId)
 
   if(!product) {
     return {data: "Product not found!", statusCode: 400}
@@ -92,19 +89,59 @@ export const updateItemInCart = async ({userId, productId, quantity}: updateItem
     return {data: "This quantity is not provided!", statusCode: 400}
   }
 
-  
   const otherCartItems = cart.items.filter(((p) => p.product.toString() !== productId))
-  
-  let total = otherCartItems.reduce((sum, product) => {
-    sum += product.quantity * product.unitPrice
-    return sum
-  }, 0)
+
+  let total = calculateCartItems({cartItems: otherCartItems})
 
   existsInCart.quantity = quantity
 
   total += existsInCart.quantity * existsInCart.unitPrice
   cart.totalAmount = total
 
+  const updatedData = await cart.save()
+  return {data: updatedData, statusCode: 200}
+}
+
+interface deleteItemFromCart {
+  productId: any,
+  userId: string
+}
+
+export const deleteItemFromCart = async ({userId, productId}: deleteItemFromCart) => {
+  const cart = await getActiveCart({userId})
+  
+  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString())  
+  
+  if (!existsInCart) {
+    return {data: "Item dose not exist in cart!", statusCode: 400}
+  }
+
+  const filteredItems = cart.items.filter(((p) => p.product.toString() !== productId))
+  
+  const total = calculateCartItems({cartItems: filteredItems})
+
+  cart.items = filteredItems
+  cart.totalAmount = total
+
+  const updatedData = await cart.save()
+  return {data: updatedData, statusCode: 200}
+}
+
+const calculateCartItems = ({cartItems}: {cartItems: ICartItem[]}) => {  
+  let total = cartItems.reduce((sum, product) => {
+    sum += product.quantity * product.unitPrice
+    return sum
+  }, 0)
+
+  return total
+}
+
+export const ClearCart = async ({userId}: {userId: string}) => {
+  const cart = await getActiveCart({userId})
+  
+  cart.items = []
+  cart.totalAmount = 0
+  
   const updatedData = await cart.save()
   return {data: updatedData, statusCode: 200}
 }
