@@ -1,4 +1,5 @@
 import { cartModel } from "../models/cartModel"
+import { productModel } from "../models/ProductModel";
 
 interface createCartForUser {
   userId: string;
@@ -7,6 +8,7 @@ interface createCartForUser {
 export const createCartForUser =  async ({userId} : createCartForUser) => {
   const cart = await cartModel.create({userId, totalAmount: 0})
   await cart.save()
+  
   return cart
 }
 
@@ -15,7 +17,8 @@ interface getActiveCart {
 }
 
 export const getActiveCart = async ({userId} : getActiveCart) => {
-  let cart = await cartModel.find({userId, status: "active"})
+  let cart = await cartModel.findOne({userId, status: "active"})
+  // let cart = undefined
 
   if (!cart) {
     let cart = await createCartForUser({userId})
@@ -23,4 +26,42 @@ export const getActiveCart = async ({userId} : getActiveCart) => {
   }
 
   return cart
+}
+
+interface addItemToCart {
+  productId: any,
+  quantity: number,
+  userId: string
+}
+
+export const addItemToCart = async ({userId, productId, quantity}: addItemToCart) => {
+  const cart = await getActiveCart({userId})  
+
+  // const existsInCart = cart.items.find((p) => p.product === productId)
+  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString());
+
+  if (existsInCart) {
+    return {data: "Item already exists in the cart!", statusCode: 400}
+  }
+
+  const product = await productModel.findById(productId)
+
+  if(!product) {
+    return {data: "Product not found!", statusCode: 400}
+  }
+
+  if (quantity > product.stock) {
+    return {data: "This quantity is not provided!", statusCode: 400}
+  }
+
+  cart.items.push({
+    product: productId,
+    unitPrice: product.price,
+    quantity: quantity
+  })
+
+  cart.totalAmount += product.price * quantity
+
+  const updatedData = await cart.save()
+  return {data: updatedData, statusCode: 200}
 }
