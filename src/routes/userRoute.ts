@@ -4,17 +4,23 @@ import { login, register } from "../services/userService";
 const router = Express.Router()
 
 router.post("/register", async (req, res) => {
-  const {firstName, lastName, email, password} = req.body
-  const result = await register({firstName, lastName, email, password})
-
-  res.status(result.statusCode).send(result.data)
+  try {
+    const {firstName, lastName, email, password} = req.body
+    const result = await register({firstName, lastName, email, password})
+    res.status(result.statusCode).send(result.data)
+  }catch (err) {
+    res.status(500).send("Something Went Wrong!")
+  }
 })
 
 router.post ("/login", async(req, res) => {
-  const { email, password} = req.body
-  const result = await login({email, password})
-
-  res.status(result.statusCode).send(result.data)
+  try {
+    const { email, password} = req.body
+    const result = await login({email, password})
+    res.status(result.statusCode).send(result.data)
+  }catch (err) {
+    res.status(500).send("Something Went Wrong!")
+  }
 })
 
 export default router

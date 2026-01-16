@@ -9,7 +9,6 @@ interface createCartForUser {
 export const createCartForUser =  async ({userId} : createCartForUser) => {
   const cart = await cartModel.create({userId, totalAmount: 0})
   await cart.save()
-  
   return cart
 }
 
@@ -35,34 +34,30 @@ interface addItemToCart {
 }
 
 export const addItemToCart = async ({userId, productId, quantity}: addItemToCart) => {
-  const cart = await getActiveCart({userId})  
-
-  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString());
-
-  if (existsInCart) {
-    return {data: "Item already exists in the cart!", statusCode: 400}
+  try {
+    const cart = await getActiveCart({userId})  
+    const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString());
+    if (existsInCart) {
+      return {data: "Item already exists in the cart!", statusCode: 400}
+    }
+    const product = await productModel.findById(productId)
+    if(!product) {
+      return {data: "Product not found!", statusCode: 400}
+    }
+    if (quantity > product.stock) {
+      return {data: "This quantity is not provided!", statusCode: 400}
+    }
+    cart.items.push({
+      product: productId,
+      unitPrice: product.price,
+      quantity: quantity
+    })
+    cart.totalAmount += product.price * quantity
+    const updatedData = await cart.save()
+    return {data: updatedData, statusCode: 200}
+  }catch (err) {
+    return {data: "Something Went Wrong!", statusCode: 500}
   }
-
-  const product = await productModel.findById(productId)
-
-  if(!product) {
-    return {data: "Product not found!", statusCode: 400}
-  }
-
-  if (quantity > product.stock) {
-    return {data: "This quantity is not provided!", statusCode: 400}
-  }
-
-  cart.items.push({
-    product: productId,
-    unitPrice: product.price,
-    quantity: quantity
-  })
-
-  cart.totalAmount += product.price * quantity
-
-  const updatedData = await cart.save()
-  return {data: updatedData, statusCode: 200}
 }
 
 interface updateItemInCart {
@@ -72,35 +67,29 @@ interface updateItemInCart {
 }
 
 export const updateItemInCart = async ({userId, productId, quantity}: updateItemInCart) => {
-  const cart = await getActiveCart({userId})
-
-  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString())  
-
-  if (!existsInCart) {
-    return {data: "Item dose not exist in cart!", statusCode: 400}
+  try {
+    const cart = await getActiveCart({userId})
+    const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString())  
+    if (!existsInCart) {
+      return {data: "Item dose not exist in cart!", statusCode: 400}
+    }
+    const product = await productModel.findById(productId)
+    if(!product) {
+      return {data: "Product not found!", statusCode: 400}
+    }
+    if (quantity > product.stock) {
+      return {data: "This quantity is not provided!", statusCode: 400}
+    }
+    const otherCartItems = cart.items.filter(((p) => p.product.toString() !== productId))
+    let total = calculateCartItems({cartItems: otherCartItems})
+    existsInCart.quantity = quantity
+    total += existsInCart.quantity * existsInCart.unitPrice
+    cart.totalAmount = total
+    const updatedData = await cart.save()
+    return {data: updatedData, statusCode: 200}
+  } catch (err) {
+    return {data: "Something Went Wrong!", statusCode: 500}
   }
-
-  const product = await productModel.findById(productId)
-
-  if(!product) {
-    return {data: "Product not found!", statusCode: 400}
-  }
-
-  if (quantity > product.stock) {
-    return {data: "This quantity is not provided!", statusCode: 400}
-  }
-
-  const otherCartItems = cart.items.filter(((p) => p.product.toString() !== productId))
-
-  let total = calculateCartItems({cartItems: otherCartItems})
-
-  existsInCart.quantity = quantity
-
-  total += existsInCart.quantity * existsInCart.unitPrice
-  cart.totalAmount = total
-
-  const updatedData = await cart.save()
-  return {data: updatedData, statusCode: 200}
 }
 
 interface deleteItemFromCart {
@@ -109,23 +98,21 @@ interface deleteItemFromCart {
 }
 
 export const deleteItemFromCart = async ({userId, productId}: deleteItemFromCart) => {
-  const cart = await getActiveCart({userId})
-  
-  const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString())  
-  
-  if (!existsInCart) {
-    return {data: "Item dose not exist in cart!", statusCode: 400}
+  try {
+    const cart = await getActiveCart({userId})
+    const existsInCart = cart.items.find((p) => p.product.toString() === productId.toString())  
+    if (!existsInCart) {
+      return {data: "Item dose not exist in cart!", statusCode: 400}
+    }
+    const filteredItems = cart.items.filter(((p) => p.product.toString() !== productId))
+    const total = calculateCartItems({cartItems: filteredItems})
+    cart.items = filteredItems
+    cart.totalAmount = total
+    const updatedData = await cart.save()
+    return {data: updatedData, statusCode: 200}
+  } catch (err) {
+    return {data: "Something Went Wrong!", statusCode: 500}
   }
-
-  const filteredItems = cart.items.filter(((p) => p.product.toString() !== productId))
-  
-  const total = calculateCartItems({cartItems: filteredItems})
-
-  cart.items = filteredItems
-  cart.totalAmount = total
-
-  const updatedData = await cart.save()
-  return {data: updatedData, statusCode: 200}
 }
 
 const calculateCartItems = ({cartItems}: {cartItems: ICartItem[]}) => {  
@@ -133,18 +120,19 @@ const calculateCartItems = ({cartItems}: {cartItems: ICartItem[]}) => {
     sum += product.quantity * product.unitPrice
     return sum
   }, 0)
-
   return total
 }
 
 export const ClearCart = async ({userId}: {userId: string}) => {
-  const cart = await getActiveCart({userId})
-  
-  cart.items = []
-  cart.totalAmount = 0
-  
-  const updatedData = await cart.save()
-  return {data: updatedData, statusCode: 200}
+  try {
+    const cart = await getActiveCart({userId})
+    cart.items = []
+    cart.totalAmount = 0
+    const updatedData = await cart.save()
+    return {data: updatedData, statusCode: 200}
+  } catch (err) {
+    return {data: "Something Went Wrong!", statusCode: 500}
+  }
 }
 
 interface checkout {
@@ -153,42 +141,37 @@ interface checkout {
 }
 
 export const checkout = async({userId, address}: checkout) => {
-  if (!address) {
-    return {data: "Please Enter Your Address" , statusCode: 400}
-  }
-  const cart = await getActiveCart({userId})
-
-  const orderItems: IOrderItem[] = []
-
-  // Loop Cart Items & Create Order Items
-  for (const item of cart.items) {
-    const product = await productModel.findById(item.product)
-
-    if (!product) {
-      return {data: "Product not found!", statusCode: 400}
+  try {
+    if (!address) {
+      return {data: "Please Enter Your Address" , statusCode: 400}
     }
-
-    const orderItem: IOrderItem = {
-      productTitle: product.title,
-      productImage: product.image,
-      unitPrice: product.price,
-      quantity: item.quantity
+    const cart = await getActiveCart({userId})
+    const orderItems: IOrderItem[] = []
+    // Loop Cart Items & Create Order Items
+    for (const item of cart.items) {
+      const product = await productModel.findById(item.product)
+      if (!product) {
+        return {data: "Product not found!", statusCode: 400}
+      }
+      const orderItem: IOrderItem = {
+        productTitle: product.title,
+        productImage: product.image,
+        unitPrice: product.price,
+        quantity: item.quantity
+      }
+      orderItems.push(orderItem)
     }
-
-    orderItems.push(orderItem)
+    const order = await orderModel.create ({
+      orderItems,
+      totalAmount: cart.totalAmount,
+      address,
+      userId
+    })
+    await order.save()
+    cart.status = "completed"
+    await cart.save
+    return {data: order, statusCode: 200}
+  } catch (err) {
+    return {data: "Something Went Wrong!", statusCode: 500}
   }
-
-  const order = await orderModel.create ({
-    orderItems,
-    totalAmount: cart.totalAmount,
-    address,
-    userId
-  })
-
-  await order.save()
-
-  cart.status = "completed"
-  await cart.save()
-
-  return {data: order, statusCode: 200}
 }
