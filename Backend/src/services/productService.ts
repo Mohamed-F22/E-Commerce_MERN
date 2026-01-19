@@ -14,7 +14,9 @@ export const getAllProducts = async () => {
 export const seedInitialProducts = async () => {
   try{
     const InitialProducts = [
-      { title: "Dell labtop", image: "https://m.media-amazon.com/images/I/61ELco-59NL._AC_UF894,1000_QL80_.jpg", price: 15000, stock: 10 }
+      { title: "Dell labtop", image: "https://m.media-amazon.com/images/I/61ELco-59NL._AC_UF894,1000_QL80_.jpg", price: 15000, stock: 10 },
+      { title: "Asus labtop", image: "https://m.media-amazon.com/images/I/61vafjrIjhL._AC_UF894,1000_QL80_.jpg", price: 40000, stock: 10 },
+      { title: "HP labtop", image: "https://cdn.mos.cms.futurecdn.net/pyL3b8cis5dcmUvgbe9ygV.jpg", price: 25000, stock: 10 }
     ];
     const products = await getAllProducts()
     if (products.length === 0) {
