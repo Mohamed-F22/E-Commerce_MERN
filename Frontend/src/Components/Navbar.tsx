@@ -15,12 +15,12 @@ import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-  const { userName, isAuthenticated } = useAuth();
+  const { userName, isAuthenticated, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -31,7 +31,13 @@ function Navbar() {
   };
 
   const handleLogin = () => {
-    navigate("/login")
+    navigate("/login");
+  };
+
+  const handleLogout = () => {
+    logout()
+    navigate("/")
+    handleCloseUserMenu ()
   }
 
   return (
@@ -71,56 +77,65 @@ function Navbar() {
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-              {isAuthenticated ? (<>
-                            <Tooltip title="Open settings">
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="center"
-                  gap={2}
+              {isAuthenticated ? (
+                <>
+                  <Tooltip title="Open settings">
+                    <Grid
+                      container
+                      alignItems="center"
+                      justifyContent="center"
+                      gap={2}
+                    >
+                      <Grid>
+                        <Typography>{userName}</Typography>
+                      </Grid>
+                      <Grid>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                          <Avatar
+                            alt={userName || ""}
+                            src="/static/images/avatar/2.jpg"
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography sx={{ textAlign: "center" }}>
+                        Orders
+                      </Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <Typography sx={{ textAlign: "center" }}>
+                        Logout
+                      </Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleLogin}
                 >
-                  <Grid>
-                    <Typography>{userName}</Typography>
-                  </Grid>
-                  <Grid>
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar
-                        alt={userName || ""}
-                        src="/static/images/avatar/2.jpg"
-                      />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    Orders
-                  </Typography>
-                </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    Logout
-                  </Typography>
-                </MenuItem>
-              </Menu>
-              </>) : <Button variant="contained" color="success" onClick={handleLogin}>Login</Button>}
-
+                  Login
+                </Button>
+              )}
             </Box>
           </Box>
         </Toolbar>
