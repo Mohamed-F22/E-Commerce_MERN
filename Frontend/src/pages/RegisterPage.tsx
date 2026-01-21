@@ -10,7 +10,7 @@ const RegisterPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { login } = useAuth();
 
@@ -21,7 +21,7 @@ const RegisterPage = () => {
     const password = passwordRef.current?.value;
 
     if (!firstName || !lastName || !email || !password) {
-      setError("Check Submitted Data!")
+      setError("Check Submitted Data!");
       return;
     }
 
@@ -54,7 +54,7 @@ const RegisterPage = () => {
     }
 
     login(email, token);
-    navigate("/")
+    navigate("/");
   };
   return (
     <Container>

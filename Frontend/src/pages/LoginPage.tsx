@@ -8,7 +8,7 @@ const LoginPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { login } = useAuth();
 
@@ -36,7 +36,6 @@ const LoginPage = () => {
     );
 
     console.log(response);
-    
 
     if (!response.ok) {
       setError("Unable to Login user, please try different credientials!");
@@ -51,7 +50,7 @@ const LoginPage = () => {
     }
 
     login(email, token);
-    navigate("/")
+    navigate("/");
   };
   return (
     <Container>

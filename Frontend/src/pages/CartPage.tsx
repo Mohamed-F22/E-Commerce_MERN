@@ -1,39 +1,21 @@
 import { Box, Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useAuth } from "../Context/Auth/AuthContext";
+import { useState } from "react";
+import { useCart } from "../Context/Cart/CartContext";
 
 const CartPage = () => {
-  const { token } = useAuth();
-  const [cart, setCart] = useState();
+  const { cartItems, totalAmount } = useCart();
   const [error, setError] = useState("");
-  useEffect(() => {
-    const fetchCart = async () => {
-      if (!token) {
-        return;
-      }
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) {
-        setError("Failed to Fetch user Cart!");
-      }
-      const data = await res.json();
-      setCart(data);
-    };
-    fetchCart();
-  }, [token]);
 
   if (error) {
     return <Box>"Something Went Wrong, Please Try Again!"</Box>;
   }
 
-  console.log(cart);
-
   return (
     <Container sx={{ mt: 2 }}>
       <Typography variant="h4">My Cart</Typography>
+      {cartItems.map((item) => (
+        <Box>{item.title}</Box>
+      ))}
     </Container>
   );
 };

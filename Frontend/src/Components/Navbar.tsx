@@ -13,10 +13,12 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useAuth } from "../Context/Auth/AuthContext";
 import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Badge from '@mui/material/Badge';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCart } from "../Context/Cart/CartContext";
 
 function Navbar() {
+  const { cartItems } = useCart();
   const { userName, isAuthenticated, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
@@ -41,10 +43,13 @@ function Navbar() {
     navigate("/");
     handleCloseUserMenu();
   };
-  
+
   const handleCart = () => {
-    navigate("/cart")
-  }
+    navigate("/cart");
+  };
+  const handleGoToHome = () => {
+    navigate("/");
+  };
 
   return (
     <AppBar position="static">
@@ -59,29 +64,36 @@ function Navbar() {
               alignItems: "center",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
+            <Button
+              variant="text"
+              sx={{ color: "#fff" }}
+              onClick={handleGoToHome}
             >
-              <AdbIcon sx={{ display: "flex", mr: 1 }} />
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
+              <Box
                 sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  letterSpacing: "0.3rem",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  cursor: "pointer",
                 }}
               >
-                Tech Hub
-              </Typography>
-            </Box>
+                <AdbIcon sx={{ display: "flex", mr: 1 }} />
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="a"
+                  sx={{
+                    mr: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    letterSpacing: "0.3rem",
+                  }}
+                >
+                  Tech Hub
+                </Typography>
+              </Box>
+            </Button>
             <Box
               sx={{
                 display: "flex",
@@ -92,8 +104,8 @@ function Navbar() {
               }}
             >
               <IconButton aria-label="cart" onClick={handleCart}>
-                <Badge badgeContent={4} color="secondary">
-                  <ShoppingCartIcon sx={{color: "#fff"}} />
+                <Badge badgeContent={cartItems.length} color="secondary">
+                  <ShoppingCartIcon sx={{ color: "#fff" }} />
                 </Badge>
               </IconButton>
               {isAuthenticated ? (
