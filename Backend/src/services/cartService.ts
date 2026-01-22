@@ -170,8 +170,11 @@ export const ClearCart = async ({ userId }: { userId: string }) => {
     const cart = await getActiveCart({ userId });
     cart.items = [];
     cart.totalAmount = 0;
-    const updatedData = await cart.save();
-    return { data: updatedData, statusCode: 200 };
+    await cart.save();
+    return {
+      data: await getActiveCart({ userId, populateProduct: true }),
+      statusCode: 200,
+    };
   } catch (err) {
     return { data: "Something Went Wrong!", statusCode: 500 };
   }
