@@ -40,6 +40,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         }),
       );
       setCartItems(cartItemsMapped);
+      setTotalAmount(cart.totalAmount)
     };
     fetchCart();
   }, [token]);
@@ -61,7 +62,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         setError("Faild to add to cart!");
         console.log(error);
       }
-      const cart = await res.json();
+      const cart = await res.json();      
       if (!cart) {
         setError("Failed to parse cart data");
         console.log(error);
@@ -82,7 +83,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         }),
       );
       setCartItems([...cartItemsMapped]);
-      setTotalAmount(cart.totalamount);
+      setTotalAmount(cart.totalAmount);
     } catch (err) {
       console.error(err);
     }
