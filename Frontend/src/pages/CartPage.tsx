@@ -2,6 +2,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { useCart } from "../Context/Cart/CartContext";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const {
@@ -27,9 +28,21 @@ const CartPage = () => {
     clearCart();
   };
 
+  const navigate = useNavigate()
+
   return (
     <Container sx={{ mt: 2 }}>
+      <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} flexDirection={"row"}>
+
       <Typography variant="h4">My Cart</Typography>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => handleClearCart()}
+        >
+        Clear Your Cart
+      </Button>
+        </Box>
       {cartItems.length > 0 ? (
         <>
           {cartItems.map((item) => (
@@ -87,16 +100,18 @@ const CartPage = () => {
             justifyContent={"space-between"}
             flexDirection={"row"}
           >
-            <Typography variant="h4">
+            <Typography variant="h5">
               Total Amount: {totalAmount} EGP
             </Typography>
-            <Button variant="contained" onClick={() => handleClearCart()}>
-              Clear Your Cart
+            <Button variant="contained" onClick={() => navigate("/checkout")}>
+              Checkout
             </Button>
           </Box>
         </>
       ) : (
-        <Typography>Cart is empety. Please start shopping and add itemas first</Typography>
+        <Typography>
+          Cart is empety. Please start shopping and add itemas first
+        </Typography>
       )}
     </Container>
   );

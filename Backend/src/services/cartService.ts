@@ -214,7 +214,7 @@ export const checkout = async ({ userId, address }: checkout) => {
     });
     await order.save();
     cart.status = "completed";
-    await cart.save;
+    await cart.save();
     return { data: order, statusCode: 200 };
   } catch (err) {
     return { data: "Something Went Wrong!", statusCode: 500 };

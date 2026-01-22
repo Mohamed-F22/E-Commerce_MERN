@@ -8,6 +8,7 @@ interface CartContextType {
   updateItemInCart: (productId: string, quantity: number) => void,
   removeItemFromCart: (ProductId: string) => void,
   clearCart: () => void,
+  checkout: (address: string) => void
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -17,6 +18,7 @@ export const CartContext = createContext<CartContextType>({
   updateItemInCart: () => {},
   removeItemFromCart: () => {},
   clearCart: () => {},
+  checkout: () => {},
 });
 
 export const useCart = () => useContext(CartContext);

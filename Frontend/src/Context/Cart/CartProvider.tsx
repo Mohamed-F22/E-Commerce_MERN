@@ -60,7 +60,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       });
       if (!res.ok) {
         console.log(res);
-        
+
         setError("Faild to add to cart!");
         // console.error(error);
       }
@@ -89,7 +89,6 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     } catch (err) {
       console.error(err);
       console.log(err);
-      
     }
   };
   const updateItemInCart = async (productId: string, quantity: number) => {
@@ -195,6 +194,29 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     setCartItems([]);
     setTotalAmount(0);
   };
+  const checkout = async (address: string) => {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/cart/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        address,
+      }),
+    });
+    if (!res.ok) {
+      setError("Faild to Deletr product from the cart!");
+      console.error(error);
+    }
+    const cart = await res.json();
+    if (!cart) {
+      setError("Failed to parse cart data");
+      console.error(error);
+    }
+    setCartItems([]);
+    setTotalAmount(0);
+  };
   return (
     <CartContext.Provider
       value={{
@@ -204,6 +226,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         updateItemInCart,
         removeItemFromCart,
         clearCart,
+        checkout,
       }}
     >
       {children}
