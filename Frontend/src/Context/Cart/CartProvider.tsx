@@ -68,7 +68,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       if (!cart) {
         setError("Failed to parse cart data");
         console.error(error);
-      }
+      }      
       const cartItemsMapped = cart.items.map(
         ({
           product,

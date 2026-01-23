@@ -57,7 +57,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" className="bg-third">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box

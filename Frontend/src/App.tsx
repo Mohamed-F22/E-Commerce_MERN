@@ -9,7 +9,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import CartProvider from "./Context/Cart/CartProvider";
 import CheckoutPage from "./pages/CheckoutPage";
 import MyOrdersPage from "./pages/MyOrdersPage";
-
+import "./App.css"
 function App() {
   return (
     <AuthProvider>
