@@ -11,6 +11,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem(TOKEN_KEY),
   );
+  const [orders, setOrders] = useState([])
 
   const isAuthenticated = !!token;
 
@@ -27,10 +28,25 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setUserName(null);
     setToken(null);
   };
+  const getUserOrders = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/user/orders`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!res.ok) {
+      console.log("Failed to get your orders!")
+      return
+    }
+    const data = await res.json()
+    console.log(data);
+    
+    setOrders(data)
+  }
 
   return (
     <AuthContext.Provider
-      value={{ userName, token, isAuthenticated, login, logout }}
+      value={{ userName, token, orders, isAuthenticated, login, logout, getUserOrders }}
     >
       {children}
     </AuthContext.Provider>
