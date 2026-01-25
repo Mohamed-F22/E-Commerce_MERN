@@ -56,14 +56,14 @@ export const addItemToCart = async ({
       (p) => p.product.toString() === productId.toString(),
     );
     if (existsInCart) {
-      return { data: "Item already exists in the cart!", statusCode: 400 };
+      return { data: "Item already exists in the cart!", statusCode: 409 };
     }
     const product = await productModel.findById(productId);
     if (!product) {
-      return { data: "Product not found!", statusCode: 400 };
+      return { data: "Product not found!", statusCode: 409 };
     }
     if (quantity > product.stock) {
-      return { data: "This quantity is not provided!", statusCode: 400 };
+      return { data: "This quantity is not provided!", statusCode: 409 };
     }
     cart.items.push({
       product: productId,
@@ -98,14 +98,14 @@ export const updateItemInCart = async ({
       (p) => p.product.toString() === productId.toString(),
     );
     if (!existsInCart) {
-      return { data: "Item dose not exist in cart!", statusCode: 400 };
+      return { data: "Item dose not exist in cart!", statusCode: 409 };
     }
     const product = await productModel.findById(productId);
     if (!product) {
-      return { data: "Product not found!", statusCode: 400 };
+      return { data: "Product not found!", statusCode: 409 };
     }
     if (quantity > product.stock) {
-      return { data: "This quantity is not provided!", statusCode: 400 };
+      return { data: "This quantity is not provided!", statusCode: 409 };
     }
     const otherCartItems = cart.items.filter(
       (p) => p.product.toString() !== productId,
@@ -139,7 +139,7 @@ export const deleteItemFromCart = async ({
       (p) => p.product.toString() === productId.toString(),
     );
     if (!existsInCart) {
-      return { data: "Item dose not exist in cart!", statusCode: 400 };
+      return { data: "Item dose not exist in cart!", statusCode: 409 };
     }
     const filteredItems = cart.items.filter(
       (p) => p.product.toString() !== productId,
@@ -188,7 +188,7 @@ interface checkout {
 export const checkout = async ({ userId, address }: checkout) => {
   try {
     if (!address) {
-      return { data: "Please Enter Your Address", statusCode: 400 };
+      return { data: "Please Enter Your Address", statusCode: 409 };
     }
     const cart = await getActiveCart({ userId });
     const orderItems: IOrderItem[] = [];
@@ -196,7 +196,7 @@ export const checkout = async ({ userId, address }: checkout) => {
     for (const item of cart.items) {
       const product = await productModel.findById(item.product);
       if (!product) {
-        return { data: "Product not found!", statusCode: 400 };
+        return { data: "Product not found!", statusCode: 409 };
       }
       const orderItem: IOrderItem = {
         productTitle: product.title,

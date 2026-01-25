@@ -8,32 +8,53 @@ import type { Product } from "../types/types";
 import { useCart } from "../Context/Cart/CartContext";
 import { useAuth } from "../Context/Auth/AuthContext";
 
-export default function ProductCard({ _id, title, price, image, stock, desc }: Product) {
-  const {isAuthenticated} = useAuth()
+export default function ProductCard({
+  _id,
+  title,
+  price,
+  image,
+  stock,
+  desc,
+}: Product) {
+  const { isAuthenticated } = useAuth();
 
   const { addItemToCart } = useCart();
 
   const handleAddToCart = () => {
     if (isAuthenticated) {
-      addItemToCart(_id)
+      addItemToCart(_id);
+    } else {
+      const loginForm = document.getElementById("login-form");
+      loginForm?.classList.add("active-login");
+      const overlay = document.getElementById("overlay");
+      overlay?.classList.add("overlay-active");
     }
-  }
-
+  };
 
   return (
     <Card sx={{ background: "transparent", color: "#fff" }}>
       <CardMedia sx={{ height: 300 }} image={image} title="green iguana" />
-      <CardContent sx={{m:0}}>
-        <Typography gutterBottom variant="h5" component="div" m={0} display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-          {title} <span style={{fontSize: 12, color: "#cfcfcfff"}}>stock ({stock})</span>
+      <CardContent sx={{ m: 0 }}>
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="div"
+          m={0}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+        >
+          {title}{" "}
+          <span style={{ fontSize: 12, color: "#cfcfcfff" }}>
+            stock ({stock})
+          </span>
         </Typography>
-        <Typography sx={{fontSize: 12, color: "#cfcfcfff"}}>{desc}</Typography>
-        <Typography variant="body2">
-          {price} EGP
+        <Typography sx={{ fontSize: 12, color: "#cfcfcfff" }}>
+          {desc}
         </Typography>
+        <Typography variant="body2">{price} EGP</Typography>
       </CardContent>
-      {isAuthenticated? "" :  ""}
-      <CardActions >
+      <CardActions>
         <Button
           color="secondary"
           variant="contained"

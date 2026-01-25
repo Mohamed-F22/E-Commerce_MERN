@@ -2,14 +2,17 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAuth } from "../Context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useForm, type SubmitHandler } from "react-hook-form"; // استيراد المكتبة
-import "../css/login.css";
-interface ILoginInput {
+import { useForm, type SubmitHandler } from "react-hook-form";
+import "../css/register.css";
+
+interface IRegisterInput {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -19,25 +22,25 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ILoginInput>();
+  } = useForm<IRegisterInput>();
 
-  const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
+  const onSubmit: SubmitHandler<IRegisterInput> = async (data) => {
     setServerError("");
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/user/login`,
+        `${import.meta.env.VITE_BASE_URL}/user/register`,
         {
           method: "POST",
           headers: {
             "Content-type": "application/json",
           },
           body: JSON.stringify(data),
-        },
+        }
       );
 
       if (!response.ok) {
-        setServerError("Incorrect Email or Password!");
+        setServerError("Unable to register user, please try different credentials!");
         return;
       }
 
@@ -51,7 +54,7 @@ const LoginForm = () => {
       login(data.email, token);
       navigate("/");
 
-      document.getElementById("login-form")?.classList.remove("active-login");
+      document.getElementById("register-form")?.classList.remove("active-register");
       document.getElementById("overlay")?.classList.remove("overlay-active");
       document.getElementById("register-form")?.classList.remove("active-register");
 
@@ -62,21 +65,21 @@ const LoginForm = () => {
     }
   };
 
-  const handleRegisterForm = () => {
-    document.getElementById("login-form")?.classList.remove("active-login");
-    document.getElementById("register-form")?.classList.add("active-register");
-  };
+  const handleGoToLogin = () => {
+        document.getElementById("login-form")?.classList.add("active-login");
+    document.getElementById("register-form")?.classList.remove("active-register");
+  }
 
   return (
     <Box
-      className="login"
+      className="register"
       position={"fixed"}
       top={"50%"}
       left={"50%"}
       sx={{ backgroundColor: "#1c1f22" }}
       p={5}
       borderRadius={5}
-      id="login-form"
+      id="register-form"
       component="form"
       onSubmit={handleSubmit(onSubmit)}
     >
@@ -86,11 +89,11 @@ const LoginForm = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          mt: 4,
+          mt: 2,
         }}
       >
-        <Typography color="#fff" variant="h4">
-          Login to your Account
+        <Typography color="#fff" variant="h4" mb={2}>
+          Register New Account
         </Typography>
 
         <Box
@@ -98,7 +101,6 @@ const LoginForm = () => {
             display: "flex",
             flexDirection: "column",
             gap: 2,
-            mt: 2,
             width: "100%",
             "& .MuiOutlinedInput-root": {
               color: "white",
@@ -110,6 +112,24 @@ const LoginForm = () => {
             "& .MuiInputLabel-root.Mui-focused": { color: "white" },
           }}
         >
+          {/* الحقول في صف واحد للاختصار إذا أردت، أو تحت بعضها */}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <TextField
+              {...register("firstName", { required: "Required" })}
+              error={!!errors.firstName}
+              helperText={errors.firstName?.message}
+              label="First Name"
+              fullWidth
+            />
+            <TextField
+              {...register("lastName", { required: "Required" })}
+              error={!!errors.lastName}
+              helperText={errors.lastName?.message}
+              label="Last Name"
+              fullWidth
+            />
+          </Box>
+
           <TextField
             {...register("email", {
               required: "Email is required",
@@ -120,20 +140,19 @@ const LoginForm = () => {
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
+            label="Email"
             sx={{
               "& input:-webkit-autofill": {
                 WebkitBoxShadow: "0 0 0 1000px #222b36 inset",
                 WebkitTextFillColor: "white !important",
-                transition: "background-color 5000s ease-in-out 0s",
               },
             }}
-            label="Email"
           />
 
           <TextField
             {...register("password", {
               required: "Password is required",
-              minLength: { value: 3, message: "Min length is 3" },
+              minLength: { value: 6, message: "Min length is 6" },
             })}
             error={!!errors.password}
             helperText={errors.password?.message}
@@ -141,20 +160,16 @@ const LoginForm = () => {
             label="Password"
           />
 
-          <Button type="submit" variant="contained">
-            Login
+          <Button type="submit" variant="contained" sx={{ mt: 1 }}>
+            Create Account
           </Button>
 
-          <Link
-            sx={{ cursor: "pointer", textAlign: "center" }}
-            onClick={handleRegisterForm}
-            underline="hover"
-          >
-            Don't have an account?
+          <Link sx={{ cursor: "pointer", textAlign: "center" }} onClick={handleGoToLogin} underline="hover">
+            Already have an account? Login
           </Link>
 
           {serverError && (
-            <Typography sx={{ color: "red", textAlign: "center" }}>
+            <Typography sx={{ color: "red", textAlign: "center", mt: 1 }}>
               {serverError}
             </Typography>
           )}
@@ -164,4 +179,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

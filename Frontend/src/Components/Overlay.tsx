@@ -3,14 +3,15 @@ import "../css/overlay.css";
 
 const Overlay = () => {
   const handleCloseCart = () => {
-    const overlay = document.getElementById("overlay");
-    overlay?.classList.remove("overlay-active");
-    
-    const cart = document.getElementById("cart");
-    cart?.classList.remove("active-cart");
+    document.getElementById("overlay")?.classList.remove("overlay-active");
 
-    const loginForm = document.getElementById("login-form");
-    loginForm?.classList.remove("active-login");
+    document.getElementById("cart")?.classList.remove("active-cart");
+
+    document.getElementById("login-form")?.classList.remove("active-login");
+
+    document
+      .getElementById("register-form")
+      ?.classList.remove("active-register");
   };
 
   return (

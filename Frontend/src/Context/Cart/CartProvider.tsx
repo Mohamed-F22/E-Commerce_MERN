@@ -3,6 +3,7 @@ import { CartContext } from "./CartContext";
 import type { CartItem } from "../../types/cartItems";
 import type { backendProduct } from "../../types/backendProduct";
 import { useAuth } from "../Auth/AuthContext";
+import { Toast } from "../../Components/alert";
 
 const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const { token } = useAuth();
@@ -60,15 +61,11 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         }),
       });
       if (!res.ok) {
-        console.log(res);
-
         setError("Faild to add to cart!");
-        // console.error(error);
       }
       const cart = await res.json();
       if (!cart) {
         setError("Failed to parse cart data");
-        console.error(error);
       }
       const cartItemsMapped = cart.items.map(
         ({
@@ -88,11 +85,14 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       );
       setCartItems([...cartItemsMapped]);
       setTotalAmount(cart.totalAmount);
-    } catch (err) {
-      console.error(err);
-      console.log(err);
+    } catch {
+      Toast.fire({
+        icon: "warning",
+        title: "Item already exists in the cart!",
+      });
     }
   };
+
   const updateItemInCart = async (productId: string, quantity: number) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/cart/items`, {
