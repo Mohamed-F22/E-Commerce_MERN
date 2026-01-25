@@ -4,7 +4,7 @@ import Collection from "../Components/Collection";
 
 const HomePage = () => {
   return (
-    <Box>
+    <Box >
       <Landing />
       <Collection />
     </Box>

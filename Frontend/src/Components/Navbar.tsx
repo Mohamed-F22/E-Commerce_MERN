@@ -35,12 +35,15 @@ function Navbar() {
   };
 
   const handleMyOrders = () => {
-    navigate("/myorders")
-    handleCloseUserMenu()
-  }
+    navigate("/myorders");
+    handleCloseUserMenu();
+  };
 
   const handleLogin = () => {
-    navigate("/login");
+    const loginForm = document.getElementById("login-form");
+    loginForm?.classList.add("active-login");
+    const overlay = document.getElementById("overlay");
+    overlay?.classList.add("overlay-active");
   };
 
   const handleLogout = () => {
@@ -50,14 +53,22 @@ function Navbar() {
   };
 
   const handleCart = () => {
-    navigate("/cart");
+    const cart = document.getElementById("cart");
+    if (cart?.classList.contains("active-cart")) {
+      cart.classList.remove("active-cart");
+    } else cart?.classList.add("active-cart");
+
+    const overlay = document.getElementById("overlay");
+    if (overlay?.classList.contains("overlay-active")) {
+      overlay.classList.remove("overlay-active");
+    } else overlay?.classList.add("overlay-active");
   };
   const handleGoToHome = () => {
     navigate("/");
   };
 
   return (
-    <AppBar position="fixed" className="bg-third">
+    <AppBar sx={{ zIndex: 1 }} position="fixed" className="bg-third">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -108,11 +119,6 @@ function Navbar() {
                 alignItems: "center",
               }}
             >
-              <IconButton aria-label="cart" onClick={handleCart}>
-                <Badge badgeContent={cartItems.length} color="secondary">
-                  <ShoppingCartIcon sx={{ color: "#fff" }} />
-                </Badge>
-              </IconButton>
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
@@ -162,6 +168,11 @@ function Navbar() {
                       </Typography>
                     </MenuItem>
                   </Menu>
+                  <IconButton aria-label="cart" onClick={handleCart}>
+                    <Badge badgeContent={cartItems.length} color="secondary">
+                      <ShoppingCartIcon sx={{ color: "#fff" }} />
+                    </Badge>
+                  </IconButton>
                 </>
               ) : (
                 <Button

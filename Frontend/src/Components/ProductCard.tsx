@@ -6,9 +6,20 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import type { Product } from "../types/types";
 import { useCart } from "../Context/Cart/CartContext";
+import { useAuth } from "../Context/Auth/AuthContext";
 
 export default function ProductCard({ _id, title, price, image, stock, desc }: Product) {
+  const {isAuthenticated} = useAuth()
+
   const { addItemToCart } = useCart();
+
+  const handleAddToCart = () => {
+    if (isAuthenticated) {
+      addItemToCart(_id)
+    }
+  }
+
+
   return (
     <Card sx={{ background: "transparent", color: "#fff" }}>
       <CardMedia sx={{ height: 300 }} image={image} title="green iguana" />
@@ -21,12 +32,13 @@ export default function ProductCard({ _id, title, price, image, stock, desc }: P
           {price} EGP
         </Typography>
       </CardContent>
+      {isAuthenticated? "" :  ""}
       <CardActions >
         <Button
           color="secondary"
           variant="contained"
           size="small"
-          onClick={() => addItemToCart(_id)}
+          onClick={handleAddToCart}
         >
           Add to Cart
         </Button>

@@ -1,9 +1,10 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import { useAuth } from "../Context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../css/login.css";
 
-const LoginPage = () => {
+const LoginForm = () => {
   const [error, setError] = useState("");
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -34,26 +35,40 @@ const LoginPage = () => {
         }),
       },
     );
-
-    console.log(response);
-
     if (!response.ok) {
       setError("Unable to Login user, please try different credientials!");
       return;
     }
-
     const token = await response.json();
-
     if (!token) {
       setError("Incorrect Token!");
       return;
     }
-
     login(email, token);
     navigate("/");
+
+    const loginForm = document.getElementById("login-form");
+    loginForm?.classList.remove("active-login");
+
+    const overlay = document.getElementById("overlay");
+    overlay?.classList.remove("overlay-active");
+
+    if (emailRef.current) emailRef.current.value = "";
+    if (passwordRef.current) passwordRef.current.value = "";
   };
   return (
-    <Container>
+    <Box
+      className="login "
+      position={"fixed"}
+      top={"50%"}
+      left={"50%"}
+      sx={{
+        backgroundColor: "#1c1f22",
+      }}
+      p={5}
+      borderRadius={5}
+      id="login-form"
+    >
       <Box
         sx={{
           display: "flex",
@@ -63,20 +78,48 @@ const LoginPage = () => {
           mt: 4,
         }}
       >
-        <Typography variant="h4">Login to your Account</Typography>
+        <Typography color="#fff" variant="h4">
+          Login to your Account
+        </Typography>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             gap: 2,
             mt: 2,
-            border: 1,
-            borderColor: "#f1f1f1",
-            borderRadius: 5,
-            p: 2,
+            width: "100%",
+            "& .MuiOutlinedInput-root": {
+              color: "white",
+              "& fieldset": {
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              },
+              "&:hover fieldset": {
+                borderColor: "white",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "white",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              color: "rgba(255, 255, 255, 0.7)",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "white",
+            },
           }}
         >
-          <TextField inputRef={emailRef} label="Email" name="email" />
+          <TextField
+            sx={{
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 1000px #222b36 inset",
+                WebkitTextFillColor: "white !important",
+                transition: "background-color 5000s ease-in-out 0s",
+              },
+            }}
+            inputRef={emailRef}
+            label="Email"
+            name="email"
+          />
           <TextField
             inputRef={passwordRef}
             type="password"
@@ -89,8 +132,8 @@ const LoginPage = () => {
           {error && <Typography sx={{ color: "red" }}>{error}</Typography>}
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
-export default LoginPage;
+export default LoginForm;

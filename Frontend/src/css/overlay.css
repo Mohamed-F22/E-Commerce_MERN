@@ -1,0 +1,6 @@
+.overlay {
+  z-index: -1;
+}
+.overlay-active {
+  z-index: 50;
+}

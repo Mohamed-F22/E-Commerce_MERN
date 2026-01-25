@@ -1,0 +1,9 @@
+.cart {
+  transition: 1s;
+  right: -40%;
+}
+
+.active-cart {
+  top: 0;
+  right: 0;
+}

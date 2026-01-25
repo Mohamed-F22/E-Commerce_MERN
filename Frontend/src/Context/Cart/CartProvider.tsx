@@ -37,6 +37,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           quantity: quantity,
           unitPrice: product.price,
           image: product.image,
+          desc: product.desc,
         }),
       );
       setCartItems(cartItemsMapped);
@@ -68,7 +69,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       if (!cart) {
         setError("Failed to parse cart data");
         console.error(error);
-      }      
+      }
       const cartItemsMapped = cart.items.map(
         ({
           product,
@@ -82,6 +83,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           quantity: quantity,
           unitPrice: product.price,
           image: product.image,
+          desc: product.desc,
         }),
       );
       setCartItems([...cartItemsMapped]);
@@ -126,6 +128,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
           quantity: quantity,
           unitPrice: product.price,
           image: product.image,
+          desc: product.desc,
         }),
       );
       setCartItems([...cartItemsMapped]);
@@ -170,6 +173,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         quantity: quantity,
         unitPrice: product.price,
         image: product.image,
+        desc: product.desc,
       }),
     );
     setCartItems([...cartItemsMapped]);
