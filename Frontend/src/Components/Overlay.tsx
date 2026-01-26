@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import "../css/overlay.css";
 import { useRender } from "../Context/visibility/RenderContext";
 
 const Overlay = () => {
