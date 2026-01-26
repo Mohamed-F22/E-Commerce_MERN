@@ -1,17 +1,14 @@
 import { Box } from "@mui/material";
 import "../css/overlay.css";
+import { useRender } from "../Context/visibility/RenderContext";
 
 const Overlay = () => {
+  const { loginOff, registerOff, overlayOff } = useRender();
   const handleCloseCart = () => {
-    document.getElementById("overlay")?.classList.remove("overlay-active");
-
     document.getElementById("cart")?.classList.remove("active-cart");
-
-    document.getElementById("login-form")?.classList.remove("active-login");
-
-    document
-      .getElementById("register-form")
-      ?.classList.remove("active-register");
+    loginOff();
+    registerOff();
+    overlayOff()
   };
 
   return (

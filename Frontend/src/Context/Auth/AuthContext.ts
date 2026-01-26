@@ -4,11 +4,11 @@ import type { Order } from "../../types/order";
 interface AuthContextType {
   userName: string | null;
   token: string | null;
-  orders: Order[]
+  orders: Order[];
   login: (userName: string, token: string) => void;
   isAuthenticated: boolean;
   logout: () => void;
-  getUserOrders: () => void
+  getUserOrders: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({

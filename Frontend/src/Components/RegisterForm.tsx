@@ -4,6 +4,7 @@ import { useAuth } from "../Context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import "../css/register.css";
+import { useRender } from "../Context/visibility/RenderContext";
 
 interface IRegisterInput {
   firstName: string;
@@ -16,6 +17,7 @@ const RegisterForm = () => {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { loginOn, registerOff, overlayOff, overlayOn } = useRender();
 
   const {
     register,
@@ -36,11 +38,13 @@ const RegisterForm = () => {
             "Content-type": "application/json",
           },
           body: JSON.stringify(data),
-        }
+        },
       );
 
       if (!response.ok) {
-        setServerError("Unable to register user, please try different credentials!");
+        setServerError(
+          "Unable to register user, please try different credentials!",
+        );
         return;
       }
 
@@ -54,10 +58,8 @@ const RegisterForm = () => {
       login(data.email, token);
       navigate("/");
 
-      document.getElementById("register-form")?.classList.remove("active-register");
-      document.getElementById("overlay")?.classList.remove("overlay-active");
-      document.getElementById("register-form")?.classList.remove("active-register");
-
+      registerOff();
+      overlayOff();
 
       reset();
     } catch {
@@ -66,9 +68,10 @@ const RegisterForm = () => {
   };
 
   const handleGoToLogin = () => {
-        document.getElementById("login-form")?.classList.add("active-login");
-    document.getElementById("register-form")?.classList.remove("active-register");
-  }
+    registerOff();
+    loginOn();
+    overlayOn();
+  };
 
   return (
     <Box
@@ -112,7 +115,6 @@ const RegisterForm = () => {
             "& .MuiInputLabel-root.Mui-focused": { color: "white" },
           }}
         >
-          {/* الحقول في صف واحد للاختصار إذا أردت، أو تحت بعضها */}
           <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               {...register("firstName", { required: "Required" })}
@@ -164,7 +166,11 @@ const RegisterForm = () => {
             Create Account
           </Button>
 
-          <Link sx={{ cursor: "pointer", textAlign: "center" }} onClick={handleGoToLogin} underline="hover">
+          <Link
+            sx={{ cursor: "pointer", textAlign: "center" }}
+            onClick={handleGoToLogin}
+            underline="hover"
+          >
             Already have an account? Login
           </Link>
 

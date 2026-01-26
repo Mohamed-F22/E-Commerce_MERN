@@ -7,7 +7,8 @@ const MyOrdersPage = () => {
 
   useEffect(() => {
     getUserOrders();
-  }, [getUserOrders]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   return (
     <Container
@@ -58,7 +59,7 @@ const MyOrdersPage = () => {
               color={"#1976d2"}
               >
             <Typography fontWeight={"bold"}>Total Amount: {order.totalAmount}</Typography>
-            <Typography fontWeight={"bold"}>Address: {order.address}</Typography>
+            <Typography fontWeight={"bold"}>Address: {order.address.governorate}</Typography>
           </Box>
         </Box>
       ))}

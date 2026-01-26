@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,17 +15,20 @@ import { useNavigate } from "react-router-dom";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "../Context/Cart/CartContext";
+import { useRender } from "../Context/visibility/RenderContext";
+import { useState, type MouseEvent } from "react";
 
 function Navbar() {
   const { cartItems } = useCart();
+  const {loginOn, overlayOn} = useRender()
   const { userName, isAuthenticated, logout } = useAuth();
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(
     null,
   );
 
   const navigate = useNavigate();
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -40,10 +42,8 @@ function Navbar() {
   };
 
   const handleLogin = () => {
-    const loginForm = document.getElementById("login-form");
-    loginForm?.classList.add("active-login");
-    const overlay = document.getElementById("overlay");
-    overlay?.classList.add("overlay-active");
+    loginOn()
+    overlayOn()
   };
 
   const handleLogout = () => {
@@ -57,11 +57,7 @@ function Navbar() {
     if (cart?.classList.contains("active-cart")) {
       cart.classList.remove("active-cart");
     } else cart?.classList.add("active-cart");
-
-    const overlay = document.getElementById("overlay");
-    if (overlay?.classList.contains("overlay-active")) {
-      overlay.classList.remove("overlay-active");
-    } else overlay?.classList.add("overlay-active");
+    overlayOn()
   };
   const handleGoToHome = () => {
     navigate("/");

@@ -1,81 +1,213 @@
-import { Box, Container, TextField, Typography } from "@mui/material";
+import { Box, Container, Grid, TextField, Typography } from "@mui/material";
 import { useCart } from "../Context/Cart/CartContext";
 import Button from "@mui/material/Button";
-import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Controller, useForm } from "react-hook-form";
+import type { IAddress } from "../types/order";
 
 const CheckoutPage = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      governorate: "",
+      town: "",
+      zipCode: "",
+      details: "",
+      notes: "",
+    },
+  });
   const { cartItems, totalAmount, checkout } = useCart();
-  const addressRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleCheckout = () => {
-    const address = addressRef.current?.value;
-    if (!address) {
-      console.log("Enter Your Adress!");
-      return;
-    }
-    checkout(address)
-    navigate("/")
+  const onSubmit = (data: IAddress) => {
+    checkout(data);
+    navigate("/");
+  };
+  const textFieldStyle = {
+    mb: 2,
+    "& .MuiOutlinedInput-root": {
+      color: "white",
+      "& fieldset": { borderColor: "rgba(255, 255, 255, 0.5)" },
+      "&:hover fieldset": { borderColor: "white" },
+      "&.Mui-focused fieldset": { borderColor: "white" },
+
+      "& input:-webkit-autofill, & textarea:-webkit-autofill": {
+        WebkitBoxShadow: "0 0 0 1000px #282c34 inset",
+        WebkitTextFillColor: "white",
+        transition: "background-color 5000s ease-in-out 0s",
+      },
+    },
+    "& .MuiInputLabel-root": { color: "rgba(255, 255, 255, 0.7)" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "white" },
+    "& .MuiFormHelperText-root": { color: "#ff8a80" },
   };
 
   return (
-    <Container sx={{ mt: 2 }}>
-      <Typography variant="h4">Checkout</Typography>
-
-      {cartItems.map((item) => (
-        <Box key={item.productId} p={1}>
-          <Box p={3} border={1} borderRadius={3} borderColor={"#c1c1c1"}>
-            <Box width="100%" display={"flex"} alignItems={"center"} gap={5}>
-              <img src={item.image} width={150} alt="" />
-              <Box
-                display="flex"
-                flexDirection={"row"}
-                justifyContent={"space-between"}
-                alignItems={"center"}
-                width="100%"
-              >
-                <Typography variant="h5">{item.title}</Typography>
-                <Typography>Unit Price : {item.unitPrice} EGP</Typography>
-                <Typography>Quantity : {item.quantity} Units</Typography>
-                <Typography>
-                  Total Price : {item.quantity * item.unitPrice} EGP
-                </Typography>
-              </Box>
+    <Box className="bg-secondary" minHeight={"100vh"} sx={{ pt: 10 }}>
+      <Container>
+        <Typography variant="h3" color="#fff">
+          Checkout
+        </Typography>
+        <Grid container>
+          <Grid size={{ md: 6 }}>
+            <Box p={5} pl={0}>
+              <Typography variant="h4" sx={{ color: "white", mb: 2 }}>
+                Order Items
+              </Typography>
+              {cartItems.map((item) => (
+                <Box key={item.productId} p={1}>
+                  <Box>
+                    <Box
+                      display="flex"
+                      flexDirection={"column"}
+                      color={"#c1c1c1"}
+                    >
+                      <Typography color="#fff" variant="h5">
+                        {item.title}
+                      </Typography>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Typography>
+                          Unit Price: {item.unitPrice} EGP
+                        </Typography>
+                        <Typography>Quantity: {item.quantity} Units</Typography>
+                        <Typography>
+                          Total Price: {item.quantity * item.unitPrice} EGP
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              ))}
             </Box>
-          </Box>
-        </Box>
-      ))}
-      <Box
-        display={"flex"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        flexDirection={"column"}
-      >
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-          flexDirection={"row"}
-          width={"100%"}
-          mt={2}
-          mb={2}
-        >
-          <TextField
-            sx={{ width: "60%" }}
-            label="Your Address"
-            variant="outlined"
-            inputRef={addressRef}
-          />
-          <Typography width={"30%"} textAlign={"right"} variant="h5">
-            Total Amount: {totalAmount} EGP
-          </Typography>
-        </Box>
-        <Button variant="contained" onClick={handleCheckout} fullWidth>
-          Confirm Order
-        </Button>
-      </Box>
-    </Container>
+          </Grid>
+          <Grid size={{ md: 6 }}>
+            {" "}
+            <Box
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              display="flex"
+              flexDirection="column"
+              p={4}
+              sx={{ backgroundColor: "transparent" }}
+            >
+              <Typography variant="h4" sx={{ color: "white", mb: 2 }}>
+                Shipping Details
+              </Typography>
+              <Grid container>
+                <Grid size={{ md: 4 }} pr={2}>
+                  <Controller
+                    name="governorate"
+                    control={control}
+                    rules={{ required: "Governorate is required" }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Governorate"
+                        variant="outlined"
+                        fullWidth
+                        sx={textFieldStyle}
+                        error={!!errors.governorate}
+                        helperText={errors.governorate?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid size={{ md: 4 }} pr={2}>
+                  <Controller
+                    name="town"
+                    control={control}
+                    rules={{ required: "Town is required" }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Town / City"
+                        variant="outlined"
+                        fullWidth
+                        sx={textFieldStyle}
+                        error={!!errors.town}
+                        helperText={errors.town?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid size={{ md: 4 }}>
+                  <Controller
+                    name="zipCode"
+                    control={control}
+                    rules={{ required: "ZIP Code is required" }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="ZIP Code"
+                        variant="outlined"
+                        fullWidth
+                        sx={textFieldStyle}
+                        error={!!errors.zipCode}
+                        helperText={errors.zipCode?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+
+              <Controller
+                name="details"
+                control={control}
+                rules={{ required: "Details are required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Address Details"
+                    multiline
+                    rows={2}
+                    variant="outlined"
+                    fullWidth
+                    sx={textFieldStyle}
+                    error={!!errors.details}
+                    helperText={errors.details?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="notes"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Notes (Optional)"
+                    variant="outlined"
+                    fullWidth
+                    sx={textFieldStyle}
+                  />
+                )}
+              />
+
+              <Typography variant="h5" sx={{ color: "white", mb: 2 }}>
+                Total Amount: {totalAmount} EGP
+              </Typography>
+
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                fullWidth
+                sx={{ fontWeight: "bold" }}
+              >
+                Confirm Order
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

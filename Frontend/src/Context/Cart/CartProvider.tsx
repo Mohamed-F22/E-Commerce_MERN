@@ -4,6 +4,7 @@ import type { CartItem } from "../../types/cartItems";
 import type { backendProduct } from "../../types/backendProduct";
 import { useAuth } from "../Auth/AuthContext";
 import { Toast } from "../../Components/alert";
+import type { IAddress } from "../../types/order";
 
 const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const { token } = useAuth();
@@ -198,15 +199,27 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     setCartItems([]);
     setTotalAmount(0);
   };
-  const checkout = async (address: string) => {
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/cart/checkout`, {
+
+  const checkout = async ({
+    governorate,
+    town,
+    zipCode,
+    details,
+    notes,
+  }: IAddress) => {
+    try{
+          const res = await fetch(`${import.meta.env.VITE_BASE_URL}/cart/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        address,
+        governorate,
+        town,
+        zipCode,
+        details,
+        notes,
       }),
     });
     if (!res.ok) {
@@ -220,6 +233,11 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
     setCartItems([]);
     setTotalAmount(0);
+    } catch (err) {
+      console.error(err);
+      
+    }
+
   };
   return (
     <CartContext.Provider
@@ -230,7 +248,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         updateItemInCart,
         removeItemFromCart,
         clearCart,
-        checkout,
+        checkout
       }}
     >
       {children}

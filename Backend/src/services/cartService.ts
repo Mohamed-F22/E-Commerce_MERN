@@ -1,5 +1,5 @@
 import { cartModel, Icart, ICartItem } from "../models/cartModel";
-import { IOrderItem, orderModel } from "../models/orderModel";
+import { IAddress, IOrderItem, orderModel } from "../models/orderModel";
 import { productModel } from "../models/ProductModel";
 
 interface createCartForUser {
@@ -182,13 +182,24 @@ export const ClearCart = async ({ userId }: { userId: string }) => {
 
 interface checkout {
   userId: string;
-  address: string;
+  governorate: string;
+  town: string;
+  zipCode: string;
+  details: string;
+  notes: string;
 }
 
-export const checkout = async ({ userId, address }: checkout) => {
+export const checkout = async ({
+  userId,
+  governorate,
+  town,
+  zipCode,
+  details,
+  notes,
+}: checkout) => {
   try {
-    if (!address) {
-      return { data: "Please Enter Your Address", statusCode: 409 };
+    if (!governorate || !town || !zipCode || !details) {
+      return { data: "Please Complete Reqired data", statusCode: 409 };
     }
     const cart = await getActiveCart({ userId });
     const orderItems: IOrderItem[] = [];
@@ -206,11 +217,19 @@ export const checkout = async ({ userId, address }: checkout) => {
       };
       orderItems.push(orderItem);
     }
+    const address: IAddress = {
+      governorate,
+      town,
+      zipCode,
+      details,
+    };
+
     const order = await orderModel.create({
       orderItems,
       totalAmount: cart.totalAmount,
       address,
       userId,
+      notes
     });
     await order.save();
     cart.status = "completed";

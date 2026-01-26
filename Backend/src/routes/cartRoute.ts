@@ -15,7 +15,7 @@ const router = Express.Router();
 router.get("/", validateJWT, async (req: ExtendRequest, res) => {
   try {
     const userId = req.user._id;
-    const cart = await getActiveCart({ userId, populateProduct: true});
+    const cart = await getActiveCart({ userId, populateProduct: true });
     res.status(200).send(cart);
   } catch (err) {
     res.status(500).send("Something Went Wrong!");
@@ -72,8 +72,15 @@ router.delete(
 router.post("/checkout", validateJWT, async (req: ExtendRequest, res) => {
   try {
     const userId = req.user._id;
-    const { address } = req.body;
-    const response = await checkout({ userId, address });
+    const { governorate, town, zipCode, details, notes } = req.body;
+    const response = await checkout({
+      userId,
+      governorate,
+      town,
+      zipCode,
+      details,
+      notes
+    });
     res.status(response.statusCode).send(response.data);
   } catch (err) {
     res.status(500).send("Something Went Wrong!");

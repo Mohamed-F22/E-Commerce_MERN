@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "../css/Cart.css";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRender } from "../Context/visibility/RenderContext";
+import Swal from "sweetalert2";
 
 const Cart = () => {
   const {
@@ -15,6 +17,8 @@ const Cart = () => {
     removeItemFromCart,
     clearCart,
   } = useCart();
+
+  const { overlayOff } = useRender();
 
   const handleQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) {
@@ -28,16 +32,38 @@ const Cart = () => {
   };
 
   const handleClearCart = () => {
-    clearCart();
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#9c27b0",
+      confirmButtonText: "Yes, Clear it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Cart has been cleared!",
+          icon: "success",
+        });
+        clearCart();
+      }
+    });
   };
 
   const navigate = useNavigate();
 
   const handleCloseCart = () => {
     const cart = document.getElementById("cart");
-    const overlay = document.getElementById("overlay");
     cart?.classList.remove("active-cart");
-    overlay?.classList.remove("overlay-active");
+    overlayOff();
+  };
+
+  const handleGoToCheckout = () => {
+    const cart = document.getElementById("cart");
+    cart?.classList.remove("active-cart");
+    overlayOff();
+    navigate("/checkout");
   };
 
   return (
@@ -69,7 +95,9 @@ const Cart = () => {
           <Typography variant="h3" color="#fff">
             Your Cart
           </Typography>
-          <Button color="error" onClick={() => handleClearCart()}>Clear Your Cart</Button>
+          <Button color="error" onClick={() => handleClearCart()}>
+            Clear Your Cart
+          </Button>
         </Box>
         {cartItems.length > 0 ? (
           <>
@@ -80,7 +108,15 @@ const Cart = () => {
               gap={3}
             >
               {cartItems.map((item) => (
-                <Box key={item.productId} p={1} display={"flex"} gap={2} borderBottom={1} borderColor={"#cfcfcfff"} pb={4}>
+                <Box
+                  key={item.productId}
+                  p={1}
+                  display={"flex"}
+                  gap={2}
+                  borderBottom={1}
+                  borderColor={"#cfcfcfff"}
+                  pb={4}
+                >
                   <img src={item.image} height={150} width={150} alt="" />
                   <Box display={"flex"} flexDirection={"column"} gap={1}>
                     <Typography color={"#fff"} variant="h5">
@@ -131,17 +167,27 @@ const Cart = () => {
               flexDirection={"column"}
             >
               <Typography variant="h5" color="White" p={2}>
-                <span style={{fontWeight:"bold"}}>Total Amount:</span> {totalAmount} EGP
+                <span style={{ fontWeight: "bold" }}>Total Amount:</span>{" "}
+                {totalAmount} EGP
               </Typography>
-              <Button style={{width: "100%"}} variant="contained" onClick={() => navigate("/checkout")}>
+              <Button
+                style={{ width: "100%" }}
+                variant="contained"
+                onClick={handleGoToCheckout}
+              >
                 Checkout
               </Button>
             </Box>
           </>
         ) : (
-          <Typography>
-            Cart is empety. Please start shopping and add itemas first
+          <>          <Typography variant="h5" color="#fff">
+            Cart is empety. 
           </Typography>
+          <Typography color="#cfcfcfff">
+            Please start shopping and add itemas first
+          </Typography>
+          </>
+
         )}
       </Container>
     </Box>

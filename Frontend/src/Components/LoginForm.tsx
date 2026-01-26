@@ -4,6 +4,7 @@ import { useAuth } from "../Context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form"; // استيراد المكتبة
 import "../css/login.css";
+import { useRender } from "../Context/visibility/RenderContext";
 interface ILoginInput {
   email: string;
   password: string;
@@ -13,6 +14,7 @@ const LoginForm = () => {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
+  const {loginOff, registerOn, overlayOn,overlayOff} = useRender()
 
   const {
     register,
@@ -51,10 +53,8 @@ const LoginForm = () => {
       login(data.email, token);
       navigate("/");
 
-      document.getElementById("login-form")?.classList.remove("active-login");
-      document.getElementById("overlay")?.classList.remove("overlay-active");
-      document.getElementById("register-form")?.classList.remove("active-register");
-
+      loginOff()
+      overlayOff()
 
       reset();
     } catch {
@@ -63,8 +63,9 @@ const LoginForm = () => {
   };
 
   const handleRegisterForm = () => {
-    document.getElementById("login-form")?.classList.remove("active-login");
-    document.getElementById("register-form")?.classList.add("active-register");
+    loginOff()
+    registerOn()
+    overlayOn()
   };
 
   return (

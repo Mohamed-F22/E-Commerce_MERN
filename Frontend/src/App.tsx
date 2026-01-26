@@ -7,31 +7,31 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import CartProvider from "./Context/Cart/CartProvider";
 import CheckoutPage from "./pages/CheckoutPage";
 import MyOrdersPage from "./pages/MyOrdersPage";
-import "./App.css"
+import "./App.css";
 import { Box } from "@mui/material";
-import Overlay from "./Components/Overlay";
-import LoginForm from "./Components/LoginForm";
-import RegisterForm from "./Components/RegisterForm";
+import RenderProvider from "./Context/visibility/RenderProvider";
+import AuthModals from "./Context/visibility/AuthModals";
+
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
+        <RenderProvider>
         <BrowserRouter>
-        <Box overflow={"hidden"} position={"relative"}>
-          <Overlay/>
-          <RegisterForm/>
-          <LoginForm/>
-          <Cart/>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/myorders" element={<MyOrdersPage />} />
-            </Route>
-          </Routes>
+          <Box overflow={"hidden"} position={"relative"}>
+            <AuthModals />
+            <Cart />
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/myorders" element={<MyOrdersPage />} />
+              </Route>
+            </Routes>
           </Box>
         </BrowserRouter>
+        </RenderProvider>
       </CartProvider>
     </AuthProvider>
   );

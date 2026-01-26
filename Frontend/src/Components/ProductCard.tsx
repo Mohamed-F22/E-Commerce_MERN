@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import type { Product } from "../types/types";
 import { useCart } from "../Context/Cart/CartContext";
 import { useAuth } from "../Context/Auth/AuthContext";
+import { useRender } from "../Context/visibility/RenderContext";
+import { Toast } from "./alert";
 
 export default function ProductCard({
   _id,
@@ -17,6 +19,7 @@ export default function ProductCard({
   desc,
 }: Product) {
   const { isAuthenticated } = useAuth();
+  const { loginOn, overlayOn } = useRender();
 
   const { addItemToCart } = useCart();
 
@@ -24,10 +27,12 @@ export default function ProductCard({
     if (isAuthenticated) {
       addItemToCart(_id);
     } else {
-      const loginForm = document.getElementById("login-form");
-      loginForm?.classList.add("active-login");
-      const overlay = document.getElementById("overlay");
-      overlay?.classList.add("overlay-active");
+      loginOn();
+      overlayOn();
+      Toast.fire({
+        icon: "warning",
+        title: "Login to Your Account First!",
+      });
     }
   };
 

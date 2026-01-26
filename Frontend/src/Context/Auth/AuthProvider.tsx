@@ -11,7 +11,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem(TOKEN_KEY),
   );
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([]);
 
   const isAuthenticated = !!token;
 
@@ -33,20 +33,28 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+    });
     if (!res.ok) {
-      console.log("Failed to get your orders!")
-      return
+      console.log("Failed to get your orders!");
+      return;
     }
-    const data = await res.json()
+    const data = await res.json();
     console.log(data);
-    
-    setOrders(data)
-  }
+
+    setOrders(data);
+  };
 
   return (
     <AuthContext.Provider
-      value={{ userName, token, orders, isAuthenticated, login, logout, getUserOrders }}
+      value={{
+        userName,
+        token,
+        orders,
+        isAuthenticated,
+        login,
+        logout,
+        getUserOrders,
+      }}
     >
       {children}
     </AuthContext.Provider>
