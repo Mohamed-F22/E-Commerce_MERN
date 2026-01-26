@@ -15,3 +15,7 @@ html {
 .bg-third {
   background-color: var(--third-color) !important;
 }
+
+body {
+  background-color: var(--secondary-color);
+}

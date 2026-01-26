@@ -80,6 +80,7 @@ const RegisterForm = () => {
       top={"50%"}
       left={"50%"}
       sx={{ backgroundColor: "#1c1f22" }}
+      zIndex={100}
       p={5}
       borderRadius={5}
       id="register-form"

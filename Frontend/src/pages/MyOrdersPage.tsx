@@ -1,4 +1,16 @@
-import { Box, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../Context/Auth/AuthContext";
 import { useEffect } from "react";
 
@@ -7,63 +19,65 @@ const MyOrdersPage = () => {
 
   useEffect(() => {
     getUserOrders();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <Container
-      sx={{
-        mt: 2,
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-      }}
-    >
-      <Typography variant="h4">Your Orders</Typography>
-      {orders.map((order) => (
-        <Box
-          key={order.orderId}
-          width={"100%"}
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
-          gap={1}
-          border={1}
-          borderColor={"#d1d1d1ff"}
-          padding={3}
-          borderRadius={3}
-        >
-          <Box               borderBottom={1}
-              borderColor={"#d1d1d1ff"}>
-          {order.orderItems.map((item) => (
-            <Box
-              key={item.productId}
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-              width={"100%"}
+    <Box mt={10} color={"#fff"}>
+      <Container
+        sx={{
+          mt: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="h4">Your Orders</Typography>
 
-            >
-              <Typography variant="h6">{item.productTitle}</Typography>
-              <Typography>Quantity : {item.quantity}</Typography>
-              <Typography>Unit Price : {item.unitPrice}</Typography>
-              <Typography>
-                Total Price : {item.unitPrice * item.quantity}
-              </Typography>
-            </Box>
-          ))}</Box>
-          <Box display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-between"}
-              width={"100%"}
-              color={"#1976d2"}
-              >
-            <Typography fontWeight={"bold"}>Total Amount: {order.totalAmount}</Typography>
-            <Typography fontWeight={"bold"}>Address: {order.address.governorate}</Typography>
-          </Box>
-        </Box>
-      ))}
-    </Container>
+        {orders.map((order) => (
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead className="bg-third">
+                <TableRow>
+                  <TableCell sx={{ color: "#fff" }}>Product</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>Unit Price</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>Quantity</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>Total Price</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody sx={{ backgroundColor: "#ffffffff" }}>
+                {order.orderItems.map((item) => (
+                  <TableRow key={item.productId}>
+                    <TableCell>{item.productTitle}</TableCell>
+                    <TableCell>{item.unitPrice} EGP</TableCell>
+                    <TableCell>{item.quantity} Piece</TableCell>
+                    <TableCell>{item.quantity * item.unitPrice} EGP</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow className="bg-third">
+                  <TableCell
+                    colSpan={2}
+                    sx={{ fontWeight: "bold", color: "#fff", border: "none" }}
+                  >
+                    Order Address: {order.address.governorate} -{" "}
+                    {order.address.town} - {order.address.details}
+                  </TableCell>
+                  <TableCell
+                    colSpan={2}
+                    sx={{ fontWeight: "bold", color: "#fff", border: "none" }}
+                  >
+                    Total Summary: {order.totalAmount} EGP
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        ))}
+      </Container>
+    </Box>
   );
 };
 

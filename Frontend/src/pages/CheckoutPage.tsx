@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import type { IAddress } from "../types/order";
+import Swal from "sweetalert2";
 
 const CheckoutPage = () => {
   const {
@@ -23,8 +24,27 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: IAddress) => {
-    checkout(data);
-    navigate("/");
+    Swal.fire({
+      title: "Confirm Order",
+      text: `Your order will arrive on:"${data.governorate} - ${data.town} - ${data.details}"`,
+      showCancelButton: true,
+      confirmButtonColor: "#9c27b0",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm Order",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Order confirmed",
+          text: "We are happy that you chose us",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        checkout(data);
+        navigate("/");
+      }
+    });
   };
   const textFieldStyle = {
     mb: 2,
@@ -196,6 +216,7 @@ const CheckoutPage = () => {
 
               <Button
                 type="submit"
+                color="secondary"
                 variant="contained"
                 size="large"
                 fullWidth

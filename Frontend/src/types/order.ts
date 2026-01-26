@@ -19,4 +19,5 @@ export interface Order {
   orderId: string;
   address: IAddress;
   totalAmount: number;
+  notes: string
 }
