@@ -43,7 +43,7 @@ const RegisterForm = () => {
 
       if (!response.ok) {
         setServerError(
-          "Unable to register user, please try different credentials!",
+          "This email is already registered. Please use a different email.",
         );
         return;
       }
@@ -123,6 +123,12 @@ const RegisterForm = () => {
               helperText={errors.firstName?.message}
               label="First Name"
               fullWidth
+              sx={{
+                "& input:-webkit-autofill": {
+                  WebkitBoxShadow: "0 0 0 1000px #1c1f22 inset",
+                  WebkitTextFillColor: "white !important",
+                },
+              }}
             />
             <TextField
               {...register("lastName", { required: "Required" })}
@@ -130,6 +136,12 @@ const RegisterForm = () => {
               helperText={errors.lastName?.message}
               label="Last Name"
               fullWidth
+              sx={{
+                "& input:-webkit-autofill": {
+                  WebkitBoxShadow: "0 0 0 1000px #1c1f22 inset",
+                  WebkitTextFillColor: "white !important",
+                },
+              }}
             />
           </Box>
 
@@ -146,7 +158,7 @@ const RegisterForm = () => {
             label="Email"
             sx={{
               "& input:-webkit-autofill": {
-                WebkitBoxShadow: "0 0 0 1000px #222b36 inset",
+                WebkitBoxShadow: "0 0 0 1000px #1c1f22 inset",
                 WebkitTextFillColor: "white !important",
               },
             }}
@@ -161,16 +173,23 @@ const RegisterForm = () => {
             helperText={errors.password?.message}
             type="password"
             label="Password"
+            sx={{
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 1000px #1c1f22 inset",
+                WebkitTextFillColor: "white !important",
+              },
+            }}
           />
 
-          <Button type="submit" variant="contained" sx={{ mt: 1 }}>
+          <Button type="submit" color="secondary" variant="contained" sx={{ mt: 1 }}>
             Create Account
           </Button>
 
           <Link
-            sx={{ cursor: "pointer", textAlign: "center" }}
+            sx={{ cursor: "pointer" }}
             onClick={handleGoToLogin}
             underline="hover"
+            color="secondary"
           >
             Already have an account? Login
           </Link>

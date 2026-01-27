@@ -14,7 +14,7 @@ const LoginForm = () => {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
-  const {loginOff, registerOn, overlayOn,overlayOff} = useRender()
+  const { loginOff, registerOn, overlayOn, overlayOff } = useRender();
 
   const {
     register,
@@ -53,8 +53,8 @@ const LoginForm = () => {
       login(data.email, token);
       navigate("/");
 
-      loginOff()
-      overlayOff()
+      loginOff();
+      overlayOff();
 
       reset();
     } catch {
@@ -63,9 +63,9 @@ const LoginForm = () => {
   };
 
   const handleRegisterForm = () => {
-    loginOff()
-    registerOn()
-    overlayOn()
+    loginOff();
+    registerOn();
+    overlayOn();
   };
 
   return (
@@ -74,7 +74,7 @@ const LoginForm = () => {
       position={"fixed"}
       top={"50%"}
       left={"50%"}
-      sx={{ backgroundColor: "#1c1f22", zIndex:100 }}
+      sx={{ backgroundColor: "#1c1f22", zIndex: 100 }}
       p={5}
       borderRadius={5}
       id="login-form"
@@ -134,22 +134,29 @@ const LoginForm = () => {
           <TextField
             {...register("password", {
               required: "Password is required",
-              minLength: { value: 3, message: "Min length is 3" },
+              minLength: { value: 6, message: "Min length is 6" },
             })}
             error={!!errors.password}
             helperText={errors.password?.message}
             type="password"
             label="Password"
+            sx={{
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 1000px #1c1f22 inset",
+                WebkitTextFillColor: "white !important",
+              },
+            }}
           />
 
-          <Button type="submit" variant="contained">
+          <Button type="submit" color="secondary" variant="contained">
             Login
           </Button>
 
           <Link
-            sx={{ cursor: "pointer", textAlign: "center" }}
+            sx={{ cursor: "pointer" }}
             onClick={handleRegisterForm}
             underline="hover"
+            color="secondary"
           >
             Don't have an account?
           </Link>
