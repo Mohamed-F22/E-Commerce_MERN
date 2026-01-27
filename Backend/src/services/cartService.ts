@@ -199,24 +199,43 @@ export const checkout = async ({
 }: checkout) => {
   try {
     if (!governorate || !town || !zipCode || !details) {
-      return { data: "Please Complete Reqired data", statusCode: 409 };
+      return { data: "Please Complete Required data", statusCode: 409 };
     }
+
     const cart = await getActiveCart({ userId });
+    if (!cart || cart.items.length === 0) {
+      return { data: "Cart is empty!", statusCode: 400 };
+    }
+
     const orderItems: IOrderItem[] = [];
-    // Loop Cart Items & Create Order Items
+
     for (const item of cart.items) {
       const product = await productModel.findById(item.product);
+
       if (!product) {
-        return { data: "Product not found!", statusCode: 409 };
+        return { data: `Product ${item.product} not found!`, statusCode: 404 };
       }
+
+      if (product.stock < item.quantity) {
+        return { 
+          data: `Sorry, only ${product.stock} units left for product: ${product.title}`, 
+          statusCode: 400 
+        };
+      }
+
       const orderItem: IOrderItem = {
         productTitle: product.title,
         productImage: product.image,
         unitPrice: product.price,
         quantity: item.quantity,
       };
+
       orderItems.push(orderItem);
+
+      product.stock -= item.quantity;
+      await product.save(); 
     }
+
     const address: IAddress = {
       governorate,
       town,
@@ -229,13 +248,15 @@ export const checkout = async ({
       totalAmount: cart.totalAmount,
       address,
       userId,
-      notes
+      notes,
     });
-    await order.save();
+    
     cart.status = "completed";
     await cart.save();
+
     return { data: order, statusCode: 200 };
   } catch (err) {
+    console.error(err);
     return { data: "Something Went Wrong!", statusCode: 500 };
   }
 };

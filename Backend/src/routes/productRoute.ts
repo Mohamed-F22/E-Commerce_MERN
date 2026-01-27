@@ -1,15 +1,15 @@
 import Express from "express";
 import { getAllProducts } from "../services/productService";
+const router = Express.Router();
 
-const router = Express.Router()
-
-router.get("/", async (req,res) => {
+router.get("/", async (req, res) => {
   try {
-    const products = await getAllProducts()
-    res.status(200).send(products)
-  }catch (err) {
-    res.status(500).send("Something Went Wrong!")
+    const products = await getAllProducts();
+    res.status(200).send(products);
+  } catch (err) {
+    res.status(500).send("Something Went Wrong!");
   }
-})
+});
 
-export default router
+
+export default router;
