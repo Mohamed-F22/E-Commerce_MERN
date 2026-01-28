@@ -60,14 +60,30 @@ export default function ProductCard({
         <Typography variant="body2">{price} EGP</Typography>
       </CardContent>
       <CardActions>
-        <Button
-          color="secondary"
-          variant="contained"
-          size="small"
-          onClick={handleAddToCart}
-        >
-          Add to Cart
-        </Button>
+        {stock > 0 ? (
+          <Button
+            color="secondary"
+            variant="contained"
+            size="small"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </Button>
+        ) : (
+          <Button
+            sx={{
+              "&.Mui-disabled": {
+                color: "#cfcfcfff",
+                backgroundColor: "#210227",
+              },
+            }}
+            variant="contained"
+            size="small"
+            disabled
+          >
+            Out of Stock
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
