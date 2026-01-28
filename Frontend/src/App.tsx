@@ -11,6 +11,7 @@ import "./App.css";
 import { Box } from "@mui/material";
 import RenderProvider from "./Context/visibility/RenderProvider";
 import AuthModals from "./Context/visibility/AuthModals";
+import Footer from "./Components/Footer";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/myorders" element={<MyOrdersPage />} />
               </Route>
             </Routes>
+            <Footer/>
           </Box>
         </BrowserRouter>
         </RenderProvider>
