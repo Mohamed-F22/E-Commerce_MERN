@@ -2,18 +2,20 @@ import { createContext, useContext } from "react";
 import type { Order } from "../../types/order";
 
 interface AuthContextType {
-  userName: string | null;
+  email: string | null;
   token: string | null;
+  userName: string | null;
   orders: Order[];
-  login: (userName: string, token: string) => void;
+  login: (email: string ,userName: string, token: string) => void;
   isAuthenticated: boolean;
   logout: () => void;
   getUserOrders: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  userName: null,
+  email: null,
   token: null,
+  userName: null,
   orders: [],
   login: () => {},
   isAuthenticated: false,

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form"; // استيراد المكتبة
 import "../css/login.css";
 import { useRender } from "../Context/visibility/RenderContext";
+import { jwtDecode } from "jwt-decode";
 interface ILoginInput {
   email: string;
   password: string;
@@ -50,7 +51,16 @@ const LoginForm = () => {
         return;
       }
 
-      login(data.email, token);
+      interface MyTokenPayload {
+        firstName: string;
+        lastName: string;
+        email: string;
+      }
+
+      const decoded = jwtDecode<MyTokenPayload>(token);
+      const userName = `${decoded.firstName} ${decoded.lastName}`;
+
+      login(data.email, token, userName);
       navigate("/");
 
       loginOff();

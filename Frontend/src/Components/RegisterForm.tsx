@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import "../css/register.css";
 import { useRender } from "../Context/visibility/RenderContext";
+import { jwtDecode } from "jwt-decode";
 
 interface IRegisterInput {
   firstName: string;
@@ -54,8 +55,16 @@ const RegisterForm = () => {
         setServerError("Incorrect Token!");
         return;
       }
+      interface MyTokenPayload {
+        firstName: string;
+        lastName: string;
+        email: string;
+      }
 
-      login(data.email, token);
+      const decoded = jwtDecode<MyTokenPayload>(token);
+      const userName = `${decoded.firstName} ${decoded.lastName}`;
+
+      login(data.email, token, userName);
       navigate("/");
 
       registerOff();

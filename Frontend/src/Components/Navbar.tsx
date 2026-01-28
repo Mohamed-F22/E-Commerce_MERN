@@ -21,7 +21,7 @@ import { useState, type MouseEvent } from "react";
 function Navbar() {
   const { cartItems } = useCart();
   const {loginOn, overlayOn} = useRender()
-  const { userName, isAuthenticated, logout } = useAuth();
+  const { userName,email, isAuthenticated, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(
     null,
   );
@@ -125,12 +125,12 @@ function Navbar() {
                       gap={2}
                     >
                       <Grid>
-                        <Typography>{userName}</Typography>
+                        <Typography>Hello, {userName}</Typography>
                       </Grid>
                       <Grid>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                           <Avatar
-                            alt={userName || ""}
+                            alt={email || ""}
                             src="/static/images/avatar/2.jpg"
                           />
                         </IconButton>

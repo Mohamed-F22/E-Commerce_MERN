@@ -10,7 +10,7 @@ const Footer = () => {
       <Box
         sx={{
           backgroundColor: "#fff",
-          color: "#000",
+          color: "#282c34",
           padding: "80px 40px",
           display: "flex",
           justifyContent: "space-between",
@@ -222,6 +222,11 @@ const Footer = () => {
             </Box>
           </Grid>
         </Grid>
+      </Box>
+      <Box textAlign={"center"} >
+        <Typography color="#fff" borderTop={1} p={1}>
+          Created By: "Eng: Mohamed Amr"
+        </Typography>
       </Box>
     </Box>
   );
