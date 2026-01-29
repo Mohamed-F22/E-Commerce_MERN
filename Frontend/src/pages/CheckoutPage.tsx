@@ -66,13 +66,13 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Box className="bg-secondary" minHeight={"100vh"} sx={{ pt: 10 }}>
+    <Box className="bg-secondary" minHeight={"100vh"} sx={{ pt: 10, pb: 5 }}>
       <Container>
         <Typography variant="h3" color="#fff">
           Checkout
         </Typography>
         <Grid container>
-          <Grid size={{ md: 6 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box p={5} pl={0}>
               <Typography variant="h4" sx={{ color: "white", mb: 2 }}>
                 Order Items
@@ -80,48 +80,63 @@ const CheckoutPage = () => {
               {cartItems.map((item) => (
                 <Box key={item.productId} p={1}>
                   <Box>
-                    <Box
-                      display="flex"
-                      flexDirection={"column"}
-                      color={"#c1c1c1"}
-                    >
-                      <Typography color="#fff" variant="h5">
-                        {item.title}
-                      </Typography>
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <Typography>
-                          Unit Price: {item.unitPrice} EGP
+                    <Grid container>
+                      <Grid size={{xs: 12, sm: 5}}>
+                        <Typography color="#fff" variant="h5">
+                          {item.title}
                         </Typography>
-                        <Typography>Quantity: {item.quantity} Units</Typography>
-                        <Typography>
-                          Total Price: {item.quantity * item.unitPrice} EGP
-                        </Typography>
-                      </Box>
-                    </Box>
+                      </Grid>
+                      <Grid color={"#cfcfcfff"} size={{xs: 12, sm: 7}}>
+                        <Box
+                          display={"flex"}
+                          alignItems={"center"}
+                          justifyContent={"space-between"}
+                          width={"100%"}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: {
+                                xs: 15,
+                                sm: 18,
+                              },
+                            }}
+                          >
+                            {item.quantity} Units
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: {
+                                xs: 15,
+                                sm: 18,
+                              },
+                            }}
+                          >
+                            Total Price: {item.quantity * item.unitPrice} EGP
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    </Grid>
                   </Box>
                 </Box>
               ))}
             </Box>
           </Grid>
-          <Grid size={{ md: 6 }}>
+          <Grid width={"100%"} size={{ md: 6 }}>
             {" "}
             <Box
               component="form"
               onSubmit={handleSubmit(onSubmit)}
               display="flex"
               flexDirection="column"
-              p={4}
-              sx={{ backgroundColor: "transparent" }}
+              pl={0}
+              sx={{ backgroundColor: "transparent", pt: 4 }}
             >
               <Typography variant="h4" sx={{ color: "white", mb: 2 }}>
                 Shipping Details
               </Typography>
               <Grid container>
-                <Grid size={{ md: 4 }} pr={2}>
+                <Grid size={{ xs: 12,sm:4 }}>
+                  <Box sx={{pr:{sm:1}}}>
                   <Controller
                     name="governorate"
                     control={control}
@@ -137,9 +152,10 @@ const CheckoutPage = () => {
                         helperText={errors.governorate?.message}
                       />
                     )}
-                  />
+                  /></Box>
                 </Grid>
-                <Grid size={{ md: 4 }} pr={2}>
+                <Grid size={{ xs: 12 ,sm:4}}>
+                  <Box sx={{pr:{sm:1}}}>
                   <Controller
                     name="town"
                     control={control}
@@ -155,9 +171,9 @@ const CheckoutPage = () => {
                         helperText={errors.town?.message}
                       />
                     )}
-                  />
+                  /></Box>
                 </Grid>
-                <Grid size={{ md: 4 }}>
+                <Grid size={{ xs: 12,sm:4 }}>
                   <Controller
                     name="zipCode"
                     control={control}

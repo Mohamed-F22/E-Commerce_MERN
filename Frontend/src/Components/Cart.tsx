@@ -69,17 +69,23 @@ const Cart = () => {
   return (
     <Box
       id="cart"
-      className="cart "
+      className="cart"
       sx={{
-        width: "40%",
+        width: {
+          xs: "80%",
+          sm: "70%",
+          md: "50%",
+        },
+        transition: "0.5s",
         position: "fixed",
         height: "100vh",
         overflowY: "scroll",
+        overflowX:"hidden",
         zIndex: 100,
         backgroundColor: "#1c1f22",
       }}
     >
-      <Container sx={{ mt: 3 }}>
+      <Container sx={{pt: 3, pb: 3}} >
         <Box textAlign={"right"}>
           <Button onClick={handleCloseCart}>
             <CloseIcon />
@@ -92,11 +98,20 @@ const Cart = () => {
           flexDirection={"row"}
           mb={5}
         >
-          <Typography variant="h3" color="#fff">
+          <Typography
+            sx={{
+              fontSize: {
+                xs: 30,
+                sm: 40,
+              },
+            }}
+            variant="h3"
+            color="#fff"
+          >
             Your Cart
           </Typography>
           <Button color="error" onClick={() => handleClearCart()}>
-            Clear Your Cart
+            <DeleteIcon />
           </Button>
         </Box>
         {cartItems.length > 0 ? (
@@ -112,28 +127,35 @@ const Cart = () => {
                   key={item.productId}
                   p={1}
                   display={"flex"}
-                  gap={2}
                   borderBottom={1}
                   borderColor={"#cfcfcfff"}
                   pb={4}
+                  sx={{gap: {
+                    xs: 1,
+                    sm: 2
+                  }}}
                 >
-                  <img src={item.image} height={150} width={150} alt="" />
-                  <Box display={"flex"} flexDirection={"column"} gap={1}>
-                    <Typography color={"#fff"} variant="h5">
+                  <Box component={"img"} src={item.image} sx={{width: {xs: 90, sm: 150, lg:180}, height:{xs:90,sm: 150, lg:180}}} alt="" />
+                  <Box display={"flex"} flexDirection={"column"} sx={{gap: {xs:0, sm:1}}}>
+                    <Typography color={"#fff"} variant="h5" sx={{fontSize:{xs: 16,sm: 25}}}>
                       {item.title}
                     </Typography>
-                    <Typography color={"#cfcfcfff"}>
+                    <Typography color={"#cfcfcfff"} sx={{fontSize:{xs: 14,sm: 25}}}>
                       {item.unitPrice} EGP
                     </Typography>
                     <Box display={"flex"} alignItems={"center"}>
                       <ButtonGroup
                         variant="outlined"
                         aria-label="Basic button group"
+                        size="small"
+                        
                       >
                         <Button
                           onClick={() =>
                             handleQuantity(item.productId, item.quantity - 1)
                           }
+                          sx={{p:0}}
+                          
                         >
                           -
                         </Button>
@@ -152,7 +174,7 @@ const Cart = () => {
                         <DeleteIcon />
                       </Button>
                     </Box>
-                    <Typography color={"#cfcfcfff"}>
+                    <Typography sx={{fontSize:{xs: 14,sm: 25}}} color={"#cfcfcfff"}>
                       <span style={{ fontWeight: "bold" }}>Total Price</span> :{" "}
                       {item.quantity * item.unitPrice} EGP
                     </Typography>
@@ -166,13 +188,14 @@ const Cart = () => {
               justifyContent={"space-between"}
               flexDirection={"column"}
             >
-              <Typography variant="h5" color="White" p={2}>
+              <Typography variant="h5" color="White" sx={{fontSize:{xs: 18,sm: 25}}} p={2}>
                 <span style={{ fontWeight: "bold" }}>Total Amount:</span>{" "}
                 {totalAmount} EGP
               </Typography>
               <Button
                 style={{ width: "100%" }}
                 variant="contained"
+                color="secondary"
                 onClick={handleGoToCheckout}
               >
                 Checkout
@@ -180,14 +203,15 @@ const Cart = () => {
             </Box>
           </>
         ) : (
-          <>          <Typography variant="h5" color="#fff">
-            Cart is empety. 
-          </Typography>
-          <Typography color="#cfcfcfff">
-            Please start shopping and add itemas first
-          </Typography>
+          <>
+            {" "}
+            <Typography variant="h5" color="#fff">
+              Cart is empety.
+            </Typography>
+            <Typography color="#cfcfcfff">
+              Please start shopping and add itemas first
+            </Typography>
           </>
-
         )}
       </Container>
     </Box>

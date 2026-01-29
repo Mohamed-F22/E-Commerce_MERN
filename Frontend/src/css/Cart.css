@@ -1,9 +1,21 @@
-.cart {
-  transition: 1s;
-  right: -40%;
-}
-
 .active-cart {
   top: 0;
-  right: 0;
+  right: 0 !important;
+}
+
+@media (min-width: 0px) {
+
+  .cart {
+    right: -80%;
+  }
+}
+@media (min-width: 600px) {
+  .cart {
+    right: -70%;
+  }
+}
+@media (min-width: 900px) {
+  .cart {
+    right: -50%;
+  }
 }

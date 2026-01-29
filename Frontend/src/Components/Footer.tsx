@@ -11,7 +11,10 @@ const Footer = () => {
         sx={{
           backgroundColor: "#fff",
           color: "#282c34",
-          padding: "80px 40px",
+          // padding: "80px 40px",
+          padding: {
+            xs: "80px 40px"
+          },
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -27,14 +30,24 @@ const Footer = () => {
         >
           <Typography
             variant="overline"
-            sx={{ fontWeight: 700, lineHeight: 1.2 }}
+            sx={{
+              fontWeight: 700,
+              lineHeight: 1.2,
+              display: {
+                xs: "none",
+                md: "block",
+              },
+            }}
           >
             HEARD <br /> ENOUGH? →
           </Typography>
           <Typography
             variant="h1"
             sx={{
-              fontSize: 80,
+              fontSize: {
+                xs: 55,
+                sm: 80
+              },
               fontWeight: 600,
               letterSpacing: "-2px",
               margin: 0,
@@ -52,12 +65,15 @@ const Footer = () => {
             width: 80,
             height: 80,
             borderRadius: "50%",
-            display: "flex",
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
             transition: "transform 0.3s ease",
             "&:hover": { transform: "scale(1.1)" },
+            display: {
+              xs: "none",
+              sm: "flex",
+            },
           }}
         >
           <ArrowForwardIcon sx={{ fontSize: 30, color: "#fff" }} />
@@ -223,7 +239,7 @@ const Footer = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box textAlign={"center"} >
+      <Box textAlign={"center"}>
         <Typography color="#fff" borderTop={1} p={1}>
           Created By: "Eng: Mohamed Amr"
         </Typography>

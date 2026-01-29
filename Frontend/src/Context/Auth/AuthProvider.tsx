@@ -47,8 +47,6 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       return;
     }
     const data = await res.json();
-    console.log(data);
-
     setOrders(data);
   };
 

@@ -2,7 +2,7 @@ import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAuth } from "../Context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useForm, type SubmitHandler } from "react-hook-form"; // استيراد المكتبة
+import { useForm, type SubmitHandler } from "react-hook-form";
 import "../css/login.css";
 import { useRender } from "../Context/visibility/RenderContext";
 import { jwtDecode } from "jwt-decode";
@@ -84,8 +84,7 @@ const LoginForm = () => {
       position={"fixed"}
       top={"50%"}
       left={"50%"}
-      sx={{ backgroundColor: "#1c1f22", zIndex: 100 }}
-      p={5}
+      sx={{ backgroundColor: "#1c1f22", zIndex: 100, p: {xs: 3, sm:5}, width: {xs: "70%", sm: "60%", md: "30%"}}}
       borderRadius={5}
       id="login-form"
       component="form"
@@ -100,7 +99,7 @@ const LoginForm = () => {
           mt: 4,
         }}
       >
-        <Typography color="#fff" variant="h4">
+        <Typography sx={{fontSize:{xs: 25, sm: 35, md: 35}}} color="#fff" variant="h4">
           Login to your Account
         </Typography>
 

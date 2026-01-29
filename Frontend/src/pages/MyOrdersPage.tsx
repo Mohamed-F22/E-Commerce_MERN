@@ -23,7 +23,7 @@ const MyOrdersPage = () => {
   }, []);
 
   return (
-    <Box mt={10} color={"#fff"}>
+    <Box pt={10} mb={10} color={"#fff"}>
       <Container
         sx={{
           mt: 2,

@@ -28,7 +28,7 @@ const Collection = () => {
   }
   return (
     <Box className="bg-secondary" sx={{ pt: 10, pb: 10 }}>
-      <Container >
+      <Container>
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -38,7 +38,11 @@ const Collection = () => {
           <Typography
             color="#ffffffff"
             fontFamily={'"Special Gothic Expanded One", sans-serif;'}
-            fontSize={"35px"}
+            fontSize={{
+              xs: "20px",
+              sm: "30px",
+              md: "35px",
+            }}
             lineHeight={1}
             fontWeight={"bold"}
             textAlign={"center"}
@@ -46,8 +50,18 @@ const Collection = () => {
             We believe in the power of technology
           </Typography>
           <Grid container>
-            <Grid p={2} size={{ md: 6 }}>
-              <Typography p={2} color="#cfcfcfff" fontSize={"22px"}>
+            <Grid p={{ xs: 0, sm: 1, md: 2 }} size={{ xs: 12, md: 6 }}>
+              <Typography
+                pb={2}
+                color="#cfcfcfff"
+                fontSize={{ xs: "15px", sm: "22px" }}
+                lineHeight={{
+                  xs: 1.2,
+                  sm: 1.5,
+                  md: 1.5,
+                  lg: 2,
+                }}
+              >
                 At Tech Zone, we are more than just a laptop store. We provide
                 cutting-edge devices that combine{" "}
                 <span style={{ color: "#fff", fontWeight: "bold" }}>
@@ -58,7 +72,17 @@ const Collection = () => {
                 students, professionals, and creators with laptops that help
                 them achieve more without compromise.
               </Typography>
-              <Typography p={2} color="#cfcfcfff" fontSize={"22px"}>
+              <Typography
+                pb={2}
+                color="#cfcfcfff"
+                fontSize={{ xs: "15px", sm: "22px" }}
+                lineHeight={{
+                  xs: 1.2,
+                  sm: 1.5,
+                  md: 1.5,
+                  lg: 2,
+                }}
+              >
                 We offer a wide range of laptops from everyday devices to high
                 <span style={{ color: "#fff", fontWeight: "bold" }}>
                   {" "}
@@ -79,32 +103,40 @@ const Collection = () => {
           </Grid>
         </Box>
         <Box id="all-products">
-          <Box p={6}>
+          <Box p={6} pl={1}>
             <Typography
               fontFamily={'"Special Gothic Expanded One", sans-serif;'}
-              fontSize={"35px"}
               fontWeight={"bold"}
               variant="h3"
               color="#fff"
+              sx={{
+                fontSize: {
+                  xs: 25,
+                  sm: 35,
+                },
+              }}
             >
               Our Collection
             </Typography>
-            <span
-              style={{
+            <Typography
+              sx={{
                 display: "block",
                 color: "#cfcfcfff",
-                fontSize: 18,
+                fontSize: {
+                  xs: 14,
+                  sm: 22,
+                },
                 fontWeight: "200",
               }}
             >
               We believe in the power of technology to make life easier and work
               more efficient.
-            </span>
+            </Typography>
           </Box>
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 1, md: 2 }}>
             {products.map((p) => {
               return (
-                <Grid key={p._id} size={{ md: 4 }} p={2}>
+                <Grid key={p._id} size={{ xs: 6, md: 4 }} p={{ xs: 1, md: 2 }}>
                   <ProductCard {...p} />
                 </Grid>
               );

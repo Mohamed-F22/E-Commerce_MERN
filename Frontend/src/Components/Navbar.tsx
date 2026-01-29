@@ -64,7 +64,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar sx={{ zIndex: 1 }} position="fixed" className="bg-third">
+    <AppBar sx={{ zIndex: 40 }} position="fixed" className="bg-third">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -124,7 +124,7 @@ function Navbar() {
                       justifyContent="center"
                       gap={2}
                     >
-                      <Grid>
+                      <Grid sx={{display: {xs: "none", sm:"block"}}}>
                         <Typography>Hello, {userName}</Typography>
                       </Grid>
                       <Grid>

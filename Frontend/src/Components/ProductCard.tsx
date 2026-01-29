@@ -38,28 +38,62 @@ export default function ProductCard({
 
   return (
     <Card sx={{ background: "transparent", color: "#fff" }}>
-      <CardMedia sx={{ height: 300 }} image={image} title="green iguana" />
-      <CardContent sx={{ m: 0 }}>
+      <CardMedia
+        sx={{
+          height: {
+            xs: 150,
+            sm: 300,
+          },
+        }}
+        image={image}
+        title="green iguana"
+      />
+      <CardContent sx={{ m: 0, p: 1 }}>
         <Typography
           gutterBottom
-          variant="h5"
           component="div"
           m={0}
           display={"flex"}
           alignItems={"center"}
           justifyContent={"space-between"}
+          variant="h5"
+          sx={{
+            fontSize: {
+              xs: 15,
+              sm: 25,
+            },
+          }}
         >
           {title}{" "}
           <span style={{ fontSize: 12, color: "#cfcfcfff" }}>
             stock ({stock})
           </span>
         </Typography>
-        <Typography sx={{ fontSize: 12, color: "#cfcfcfff" }}>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: 11,
+              md: 14,
+            },
+            lineHeight: 1,
+            color: "#cfcfcfff",
+          }}
+        >
           {desc}
         </Typography>
-        <Typography variant="body2">{price} EGP</Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            fontSize: {
+              xs: 13,
+              sm: 22,
+            },
+          }}
+        >
+          {price} EGP
+        </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ m: 0, p: 1 }}>
         {stock > 0 ? (
           <Button
             color="secondary"

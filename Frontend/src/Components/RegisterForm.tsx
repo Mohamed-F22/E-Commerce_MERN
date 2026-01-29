@@ -88,9 +88,7 @@ const RegisterForm = () => {
       position={"fixed"}
       top={"50%"}
       left={"50%"}
-      sx={{ backgroundColor: "#1c1f22" }}
-      zIndex={100}
-      p={5}
+      sx={{ backgroundColor: "#1c1f22", zIndex: 100, p: {xs: 3, sm:5}, width: {xs: "70%", sm: "60%", md: "30%"}}}
       borderRadius={5}
       id="register-form"
       component="form"
@@ -105,7 +103,7 @@ const RegisterForm = () => {
           mt: 2,
         }}
       >
-        <Typography color="#fff" variant="h4" mb={2}>
+        <Typography sx={{fontSize:{xs: 25, sm: 35, md: 30, lg: 35}}} color="#fff" variant="h4" mb={2}>
           Register New Account
         </Typography>
 
